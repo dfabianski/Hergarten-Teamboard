@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="de" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT- & Digitalisierungs-Pipeline | Digital Neuzeit OS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    colors: {
+                        cyber: {
+                            50: '#f0f5ff',
+                            100: '#e0ebff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            900: '#0f172a',
+                            950: '#030712',
+                        }
+                    },
+                    boxShadow: {
+                        'neon-blue': '0 0 20px -3px rgba(59, 130, 246, 0.35)',
+                        'neon-emerald': '0 0 20px -3px rgba(16, 185, 129, 0.35)',
+                        'neon-amber': '0 0 20px -3px rgba(245, 158, 11, 0.35)',
+                        'neon-purple': '0 0 20px -3px rgba(168, 85, 247, 0.35)',
+                        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #030712;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(30, 58, 138, 0.22) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(88, 28, 135, 0.18) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(15, 23, 42, 0.8) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        /* Custom Modern Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(51, 65, 85, 0.8);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(99, 102, 241, 0.8);
+        }
+
+        /* Glassmorphism Classes */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .glass-card:hover {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+
+        .glass-modal {
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        /* Animated Grid Overlay */
+        .bg-grid-pattern {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+        .animate-glow {
+            animation: pulseGlow 4s infinite ease-in-out;
+        }
+    </style>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+</head>
+<body class="text-slate-100 font-sans min-h-screen pb-16 bg-grid-pattern selection:bg-indigo-500 selection:text-white">
+
+    <header class="sticky top-0 z-40 glass-panel border-b border-slate-800/80 shadow-2xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                
+                <!-- Logo & Subtitle -->
+                <div class="flex items-center gap-4">
+                    <div class="relative group">
+                        <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl blur opacity-70 group-hover:opacity-100 transition duration-300"></div>
+                        <div class="relative p-2.5 bg-slate-950 rounded-xl border border-slate-700/80 text-blue-400">
+                            <i data-lucide="cpu" class="w-6 h-6 animate-pulse"></i>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight text-white flex items-center gap-2">
+                                IT- Pipeline
+                                <span class="text-xs font-mono px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">OS v3.0</span>
+                            </h1>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
+                            <p class="text-xs text-slate-400 font-medium">Digitalisierungs-Steuerung & Workflow-Engines</p>
+                            <span class="text-slate-600">•</span>
+                            <span class="inline-flex items-center gap-1.5 text-[11px] px-2.5 py-0.5 rounded-full font-mono transition-all" id="datenquelleBadge">
+                                Verbinde Cloud...
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Controls: Search + Actions -->
+                <div class="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
+                    <div class="relative w-full sm:w-64">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
+                            <i data-lucide="search" class="w-4 h-4"></i>
+                        </span>
+                        <input type="text" id="suche" placeholder="Pipeline durchsuchen..." 
+                               class="w-full pl-9 pr-4 py-2 bg-slate-900/90 focus:bg-slate-950 border border-slate-700/80 focus:border-indigo-500 rounded-xl text-xs text-slate-200 placeholder-slate-500 transition-all outline-none focus:ring-1 focus:ring-indigo-500"
+                               oninput="filterProjekte()">
+                    </div>
+
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <button onclick="oeffneFormularModal()" class="relative group overflow-hidden bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold py-2 px-4 rounded-xl text-xs shadow-neon-blue transition-all flex items-center justify-center gap-2 w-full sm:w-auto">
+                            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                            <span>Projekt erfassen</span>
+                        </button>
+                        
+                        <button onclick="toggleAiModal()" class="relative bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 font-semibold py-2 px-3.5 rounded-xl text-xs border border-indigo-500/30 shadow-sm flex items-center justify-center gap-2 transition-all w-full sm:w-auto group">
+                            <i data-lucide="bot" class="w-4 h-4 text-indigo-400 group-hover:scale-110 transition-transform"></i>
+                            <span class="hidden sm:inline">AI Advisor</span>
+                        </button>
+
+                        <button onclick="toggleVerlauf()" class="relative bg-slate-900 hover:bg-slate-800 text-slate-300 font-semibold py-2 px-3.5 rounded-xl text-xs border border-slate-700/80 shadow-sm flex items-center justify-center gap-2 transition-all w-full sm:w-auto">
+                            <i data-lucide="activity" class="w-4 h-4 text-indigo-400"></i>
+                            <span class="hidden sm:inline">Verlauf</span>
+                            <span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-indigo-500 rounded-full hidden shadow-neon-purple" id="verlaufBadge"></span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 mt-8">
+        
+        <!-- Metrics Bar -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="glass-panel p-4 rounded-2xl border border-slate-800/80 hover:border-slate-700 transition-all flex items-center gap-3.5 group">
+                <div class="p-3 bg-slate-900 rounded-xl text-slate-400 group-hover:text-white group-hover:bg-indigo-600/20 transition-all border border-slate-800">
+                    <i data-lucide="layers" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <div class="text-2xl font-extrabold tracking-tight font-mono text-white" id="stat-gesamt">0</div>
+                    <div class="text-[11px] text-slate-400 font-medium">Gesamt Pipeline</div>
+                </div>
+            </div>
+
+            <div class="glass-panel p-4 rounded-2xl border border-slate-800/80 hover:border-blue-500/30 transition-all flex items-center gap-3.5 group">
+                <div class="p-3 bg-blue-500/10 rounded-xl text-blue-400 group-hover:bg-blue-500/20 transition-all border border-blue-500/20">
+                    <i data-lucide="git-pull-request" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <div class="text-2xl font-extrabold tracking-tight font-mono text-blue-400" id="stat-arbeit">0</div>
+                    <div class="text-[11px] text-slate-400 font-medium">In Umsetzung</div>
+                </div>
+            </div>
+
+            <div class="glass-panel p-4 rounded-2xl border border-slate-800/80 hover:border-amber-500/30 transition-all flex items-center gap-3.5 group">
+                <div class="p-3 bg-amber-500/10 rounded-xl text-amber-400 group-hover:bg-amber-500/20 transition-all border border-amber-500/20">
+                    <i data-lucide="flask-conical" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <div class="text-2xl font-extrabold tracking-tight font-mono text-amber-400" id="stat-test">0</div>
+                    <div class="text-[11px] text-slate-400 font-medium">Im Test / QA</div>
+                </div>
+            </div>
+
+            <div class="glass-panel p-4 rounded-2xl border border-slate-800/80 hover:border-emerald-500/30 transition-all flex items-center gap-3.5 group">
+                <div class="p-3 bg-emerald-500/10 rounded-xl text-emerald-400 group-hover:bg-emerald-500/20 transition-all border border-emerald-500/20">
+                    <i data-lucide="check-circle2" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <div class="text-2xl font-extrabold tracking-tight font-mono text-emerald-400" id="stat-fertig">0</div>
+                    <div class="text-[11px] text-slate-400 font-medium">Erfolgreich beendet</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kanban Columns -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
+            
+            <!-- Neu Column -->
+            <div class="glass-panel rounded-2xl p-4 border border-slate-800/80 transition-all column-container" id="col-neu">
+                <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-800">
+                    <span class="font-bold text-slate-200 flex items-center gap-2 text-xs uppercase tracking-wider">
+                        <span class="w-2.5 h-2.5 rounded-full bg-slate-500 shadow-sm"></span> Neu erfasst
+                    </span>
+                    <span class="bg-slate-800/80 text-slate-300 text-xs font-mono font-bold px-2 py-0.5 rounded-full border border-slate-700" id="zaehler-neu">0</span>
+                </div>
+                <div class="karten-liste space-y-3 min-h-[450px] transition-all rounded-xl p-1" id="liste-neu"
+                     ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'neu')">
+                </div>
+            </div>
+
+            <!-- In Arbeit Column -->
+            <div class="glass-panel rounded-2xl p-4 border border-slate-800/80 transition-all column-container" id="col-arbeit">
+                <div class="flex items-center justify-between pb-3 mb-4 border-b border-blue-500/40">
+                    <span class="font-bold text-slate-200 flex items-center gap-2 text-xs uppercase tracking-wider">
+                        <span class="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-neon-blue"></span> In Arbeit
+                    </span>
+                    <span class="bg-blue-500/10 text-blue-400 text-xs font-mono font-bold px-2 py-0.5 rounded-full border border-blue-500/20" id="zaehler-arbeit">0</span>
+                </div>
+                <div class="karten-liste space-y-3 min-h-[450px] transition-all rounded-xl p-1" id="liste-arbeit"
+                     ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'arbeit')">
+                </div>
+            </div>
+
+            <!-- Im Test Column -->
+            <div class="glass-panel rounded-2xl p-4 border border-slate-800/80 transition-all column-container" id="col-test">
+                <div class="flex items-center justify-between pb-3 mb-4 border-b border-amber-500/40">
+                    <span class="font-bold text-slate-200 flex items-center gap-2 text-xs uppercase tracking-wider">
+                        <span class="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-neon-amber"></span> Im Test / Review
+                    </span>
+                    <span class="bg-amber-500/10 text-amber-400 text-xs font-mono font-bold px-2 py-0.5 rounded-full border border-amber-500/20" id="zaehler-test">0</span>
+                </div>
+                <div class="karten-liste space-y-3 min-h-[450px] transition-all rounded-xl p-1" id="liste-test"
+                     ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'test')">
+                </div>
+            </div>
+
+            <!-- Fertig Column -->
+            <div class="glass-panel rounded-2xl p-4 border border-slate-800/80 transition-all column-container" id="col-fertig">
+                <div class="flex items-center justify-between pb-3 mb-4 border-b border-emerald-500/40">
+                    <span class="font-bold text-slate-200 flex items-center gap-2 text-xs uppercase tracking-wider">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-neon-emerald"></span> Fertig
+                    </span>
+                    <span class="bg-emerald-500/10 text-emerald-400 text-xs font-mono font-bold px-2 py-0.5 rounded-full border border-emerald-500/20" id="zaehler-fertig">0</span>
+                </div>
+                
+                <!-- Main Container for Completed Cards -->
+                <div class="space-y-3 min-h-[450px] transition-all rounded-xl p-1 flex flex-col justify-between"
+                     ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'fertig')">
+                    
+                    <div class="karten-liste space-y-3" id="liste-fertig"></div>
+                    
+                    <!-- Toggle Expansion Button for Completed Items -->
+                    <div id="fertigToggleContainer" class="pt-2 hidden">
+                        <button onclick="toggleShowAllFertig()" id="btnToggleFertig" 
+                                class="w-full py-2.5 px-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-emerald-400 border border-emerald-500/30 text-xs font-medium transition-all flex items-center justify-center gap-2 hover:shadow-neon-emerald group">
+                            <i data-lucide="chevron-down" id="iconToggleFertig" class="w-4 h-4 transition-transform duration-300 group-hover:translate-y-0.5"></i>
+                            <span id="textToggleFertig">Alle anzeigen</span>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Form Modal -->
+    <div id="formularModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center z-50 hidden p-4">
+        <section class="glass-modal rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto transform transition-all duration-300 shadow-2xl">
+            <div class="flex items-center justify-between mb-5 border-b border-slate-800 pb-4">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-blue-500/10 rounded-xl text-blue-400 border border-blue-500/20">
+                        <i data-lucide="plus-circle" class="w-5 h-5" id="modalIcon"></i>
+                    </div>
+                    <h2 class="text-base font-bold text-white uppercase tracking-wider" id="formularTitel">Neues IT-Projekt erfassen</h2>
+                </div>
+                <button onclick="schließeFormularModal()" class="p-2 hover:bg-slate-800 rounded-xl text-slate-400 hover:text-white transition-all">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <form id="projektForm" class="space-y-4">
+                <input type="hidden" id="editId">
+                
+                <div>
+                    <label for="titel" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5">Projektname</label>
+                    <input type="text" id="titel" placeholder="z. B. AI-Schnittstelle v2 oder Cloud-Migration" required 
+                           class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all">
+                </div>
+
+                <div>
+                    <label for="beschreibung" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5">Beschreibung / Spezifikation</label>
+                    <textarea id="beschreibung" placeholder="Spezifikation, Projektziele & Links..." rows="3"
+                              class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 outline-none resize-none transition-all"></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="mitarbeiter" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5">Verantwortlich</label>
+                        <input type="text" id="mitarbeiter" placeholder="z. B. Dominik Fabianski" required 
+                               class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all">
+                    </div>
+                    <div>
+                        <label for="deadline" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5">Fälligkeitsdatum</label>
+                        <input type="date" id="deadline" required 
+                               class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700/80 rounded-xl text-xs text-white focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="kategorie" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5">Kategorie</label>
+                        <select id="kategorie" class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700/80 rounded-xl text-xs text-white focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all">
+                            <option value="Digital">Digital</option>
+                            <option value="Infrastruktur">Infrastruktur</option>
+                            <option value="Organisation">Organisation</option>
+                            <option value="Schnittstelle">Schnittstelle</option>
+                            <option value="Event">Event</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="prio" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5">Priorität</label>
+                        <select id="prio" class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700/80 rounded-xl text-xs text-white focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all">
+                            <option value="prio-niedrig">Niedrig (Grün)</option>
+                            <option value="prio-mittel" selected>Mittel (Gelb)</option>
+                            <option value="prio-hoch">Hoch (Rot)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="border-t border-slate-800 pt-4 mt-2">
+                    <div class="flex items-center justify-between mb-3">
+                        <label class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400">Unterpunkte / Checkliste</label>
+                        <div class="flex items-center gap-2">
+                            <button type="button" onclick="generiereAiUnterpunkte()" class="text-xs text-indigo-400 hover:text-indigo-300 font-semibold flex items-center gap-1 transition-colors px-2 py-1 bg-indigo-500/10 rounded-lg border border-indigo-500/20">
+                                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-400"></i> AI Checkliste generieren
+                            </button>
+                            <button type="button" onclick="fuegeUnterpunktHinzu()" class="text-xs text-slate-300 hover:text-white font-semibold flex items-center gap-1 transition-colors px-2 py-1 bg-slate-800 rounded-lg">
+                                <i data-lucide="plus" class="w-3.5 h-3.5"></i> Hinzufügen
+                            </button>
+                        </div>
+                    </div>
+                    <div id="unterpunkteFormContainer" class="space-y-2"></div>
+                </div>
+
+                <div class="flex justify-end gap-3 border-t border-slate-800 pt-5 mt-4">
+                    <button type="button" onclick="schließeFormularModal()" class="px-4 py-2.5 rounded-xl border border-slate-700 text-slate-300 hover:bg-slate-800 text-xs font-semibold transition-all">Abbrechen</button>
+                    <button type="submit" id="btnSpeichern" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold py-2.5 px-6 rounded-xl text-xs shadow-neon-blue transition-all flex items-center gap-2">
+                        <i data-lucide="check" class="w-4 h-4"></i>
+                        <span id="btnText">Anlegen</span>
+                    </button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <!-- Activity Log Drawer -->
+    <div id="verlaufDrawer" class="fixed inset-y-0 right-0 w-full sm:w-96 glass-modal border-l border-slate-800 shadow-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+        <div class="p-4 border-b border-slate-800 flex items-center justify-between">
+            <div class="flex items-center gap-2 text-white">
+                <i data-lucide="activity" class="w-5 h-5 text-indigo-400"></i>
+                <h3 class="font-bold text-xs uppercase tracking-wider">Aktivitäts-Verlauf Log</h3>
+            </div>
+            <button onclick="toggleVerlauf()" class="p-2 hover:bg-slate-800 rounded-xl text-slate-400 hover:text-white transition-all">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+        <div class="flex-1 overflow-y-auto p-4 space-y-3 font-mono text-xs" id="verlaufListe"></div>
+        <div class="p-4 border-t border-slate-800 bg-slate-950/60 flex justify-between gap-3">
+            <span class="text-[11px] text-slate-500 self-center font-mono" id="verlaufZaehler">0 Einträge</span>
+            <button onclick="leereVerlauf()" class="px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-xl text-xs font-semibold border border-rose-500/20 transition-colors flex items-center gap-1.5">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Log leeren
+            </button>
+        </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div id="deleteModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center z-50 hidden p-4">
+        <div class="glass-modal p-6 rounded-2xl max-w-sm w-full shadow-2xl border border-rose-500/30">
+            <div class="flex items-center gap-3 text-rose-400 mb-3">
+                <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+                <h3 class="text-base font-bold text-white">Projekt löschen?</h3>
+            </div>
+            <p class="text-xs text-slate-400 mb-6 leading-relaxed">Möchtest du dieses Projekt wirklich unwiderruflich aus der Digitalisierungs-Pipeline entfernen?</p>
+            <div class="flex justify-end gap-3">
+                <button onclick="schließeDeleteModal()" class="px-4 py-2 rounded-xl border border-slate-700 text-slate-300 hover:bg-slate-800 text-xs font-semibold transition-all">Abbrechen</button>
+                <button id="confirmDeleteBtn" class="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-semibold shadow-sm transition-all">Unwiderruflich löschen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Advisor Modal -->
+    <div id="aiModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center z-50 hidden p-4">
+        <div class="glass-modal rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto transform transition-all duration-300 shadow-2xl border border-indigo-500/30 flex flex-col">
+            <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-indigo-500/10 rounded-xl text-indigo-400 border border-indigo-500/20">
+                        <i data-lucide="bot" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-bold text-white uppercase tracking-wider">AI Pipeline Advisor</h2>
+                        <p class="text-[11px] text-slate-400">Powered by Gemini 3 Flash</p>
+                    </div>
+                </div>
+                <button onclick="toggleAiModal()" class="p-2 hover:bg-slate-800 rounded-xl text-slate-400 hover:text-white transition-all">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4 my-2 flex-1">
+                <div class="flex gap-2">
+                    <button onclick="frageAi('analysiere')" class="px-3 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-xl text-xs font-medium text-indigo-300 transition-colors flex items-center gap-1.5">
+                        <i data-lucide="pie-chart" class="w-3.5 h-3.5"></i> Pipeline Audit
+                    </button>
+                    <button onclick="frageAi('engpässe')" class="px-3 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-xl text-xs font-medium text-amber-300 transition-colors flex items-center gap-1.5">
+                        <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> Engpässe prüfen
+                    </button>
+                    <button onclick="frageAi('ideen')" class="px-3 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-xl text-xs font-medium text-emerald-300 transition-colors flex items-center gap-1.5">
+                        <i data-lucide="lightbulb" class="w-3.5 h-3.5"></i> Neue Ideen
+                    </button>
+                </div>
+
+                <div class="relative">
+                    <textarea id="aiPromptInput" placeholder="Stelle eine Frage zu deinen Projekten oder lass dir Empfehlungen geben..." rows="3"
+                              class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 outline-none resize-none transition-all"></textarea>
+                    <button onclick="sendeAiAnfrage()" class="absolute bottom-3 right-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold py-1.5 px-3 rounded-lg text-xs shadow-neon-blue transition-all flex items-center gap-1.5">
+                        <span>Senden</span>
+                        <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                    </button>
+                </div>
+
+                <div id="aiResponseContainer" class="bg-slate-950/80 border border-slate-800 rounded-xl p-4 text-xs font-mono text-slate-300 min-h-[160px] max-h-[300px] overflow-y-auto leading-relaxed">
+                    <span class="text-slate-500 italic">Klicke auf eine Schnellfrage oder gib deinen Prompt ein, um den Gemini AI Advisor zu nutzen...</span>
+                </div>
+            </div>
+
+            <div class="flex justify-end pt-3 border-t border-slate-800">
+                <button onclick="toggleAiModal()" class="px-4 py-2 rounded-xl border border-slate-700 text-slate-300 hover:bg-slate-800 text-xs font-semibold transition-all">Schließen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="max-w-7xl mx-auto mt-16 px-4 sm:px-6 text-slate-500 text-xs border-t border-slate-800/80 pt-6">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <div class="p-1.5 bg-indigo-500/10 rounded-lg text-indigo-400 border border-indigo-500/20">
+                    <i data-lucide="sparkles" class="w-4 h-4"></i>
+                </div>
+                <span class="font-semibold text-slate-300">Konzipiert & realisiert von Dominik Fabianski</span>
+            </div>
+            <div class="text-slate-500 font-mono text-[11px]">
+                &copy; 2026 IT-Projekt-Pipeline | Digital Neuzeit Edition v3.0
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Deine Firebase Configuration
+        const festeFirebaseConfig = {
+            apiKey: "AIzaSyCIFoyJ86qtw44VvPvRK13QCLOANwRKq0k",
+            authDomain: "hergarten-dashboard.firebaseapp.com",
+            projectId: "hergarten-dashboard",
+            storageBucket: "hergarten-dashboard.firebasestorage.app",
+            messagingSenderId: "545038509092",
+            appId: "1:545038509092:web:63bba33139dd59fc7924b1"
+        };
+
+        let projekte = [];
+        let logs = [];
+        let suchFilter = "";
+        let deleteCandidateId = null;
+        let isFirebaseConnected = false;
+        let showAllFertig = false; // State for finished column collapse
+        let unsubscribeProjekte = null;
+        let unsubscribeLogs = null;
+        let db = null;
+        let auth = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initApp();
+            lucide.createIcons();
+        });
+
+        function initApp() {
+            verbindeMitFirebase(festeFirebaseConfig);
+        }
+
+        function oeffneFormularModal() {
+            setzeFormularZurueck();
+            document.getElementById('formularModal').classList.remove('hidden');
+        }
+
+        function schließeFormularModal() {
+            document.getElementById('formularModal').classList.add('hidden');
+        }
+
+        function toggleAiModal() {
+            const modal = document.getElementById('aiModal');
+            modal.classList.toggle('hidden');
+            lucide.createIcons();
+        }
+
+        async function aufrufeGeminiApi(systemPrompt, userQuery) {
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] }
+            };
+
+            let delay = 1000;
+            for (let attempt = 0; attempt < 4; attempt++) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    const result = await response.json();
+                    const candidate = result.candidates?.[0];
+                    if (candidate && candidate.content?.parts?.[0]?.text) {
+                        return candidate.content.parts[0].text;
+                    }
+                    throw new Error("Keine Antwort von Gemini erhalten.");
+                } catch (err) {
+                    if (attempt === 3) throw err;
+                    await new Promise(r => setTimeout(r, delay));
+                    delay *= 2;
+                }
+            }
+        }
+
+        async function generiereAiUnterpunkte() {
+            const titel = document.getElementById('titel').value.trim();
+            const beschreibung = document.getElementById('beschreibung').value.trim();
+
+            if (!titel) {
+                alert("Bitte gib zuerst einen Projektnamen ein.");
+                return;
+            }
+
+            const btn = event.target.closest('button');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i> Generiere...`;
+            lucide.createIcons();
+
+            try {
+                const systemPrompt = "Du bist ein professioneller IT-Projektmanager. Generiere genau 3 bis 5 präzise Checklisten-Unterpunkte für das gegebene Projekt. Antworte AUSSCHLIESSLICH im JSON-Array-Format mit Strings, z.B. [\"Unterpunkt 1\", \"Unterpunkt 2\"]. Kein anderer Text.";
+                const userQuery = `Projektname: ${titel}\nBeschreibung: ${beschreibung}`;
+                
+                const responseText = await aufrufeGeminiApi(systemPrompt, userQuery);
+                // Extrahiere JSON aus Antwort falls von Markdown umschlossen
+                const cleanJson = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
+                constpunkteListe = JSON.parse(cleanJson);
+
+                if (Array.isArray(punktListe)) {
+                    punktListe.forEach(punkt => fuegeUnterpunktHinzu(punkt, false));
+                }
+            } catch (err) {
+                console.error("AI Checklisten-Fehler:", err);
+                // Fallback generierung falls JSON parsing fehlschlägt
+                fuegeUnterpunktHinzu("Anforderungsanalyse & Scope definieren", false);
+                fuegeUnterpunktHinzu("Architektur & Design festlegen", false);
+                fuegeUnterpunktHinzu("Umsetzung & Testing durchführen", false);
+            } finally {
+                btn.innerHTML = originalHTML;
+                lucide.createIcons();
+            }
+        }
+
+        async function frageAi(typ) {
+            const input = document.getElementById('aiPromptInput');
+            const responseBox = document.getElementById('aiResponseContainer');
+            responseBox.innerHTML = `<div class="flex items-center gap-2 text-indigo-400"><i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Gemini analysiert die Pipeline...</div>`;
+            lucide.createIcons();
+
+            let query = input.value.trim();
+            let promptType = "Du bist ein erfahrener CTO und Berater für Digitalisierungsprojekte.";
+
+            if (typ === 'analysiere') {
+                query = "Analysiere den aktuellen Stand aller Projekte in unserem Dashboard und gib ein kurzes, prägnantes Executive Summary mit Empfehlungen.";
+            } else if (typ === 'engpässe') {
+                query = "Welche potenziellen Engpässe oder Risiken siehst du bei überfälligen Deadlines oder vielen Aufgaben in 'In Arbeit'?";
+            } else if (typ === 'ideen') {
+                query = "Schlage 3 spannende, moderne Digitalisierungs- oder Automatisierungsprojekte für unser Team vor.";
+            }
+
+            const projektDatenZusammenfassung = JSON.stringify(projekte.map(p => ({
+                titel: p.titel,
+                status: p.status,
+                prio: p.prio,
+                deadline: p.deadline,
+                kategorie: p.kategorie
+            })));
+
+            const fullQuery = `${query}\n\nAktuelle Projekt-Daten in JSON:\n${projektDatenZusammenfassung}`;
+
+            try {
+                const antwort = await aufrufeGeminiApi(promptType, fullQuery);
+                responseBox.innerText = antwort;
+            } catch (err) {
+                console.error(err);
+                responseBox.innerText = "Fehler bei der Kommunikation mit dem Gemini API Advisor.";
+            }
+        }
+
+        async function sendeAiAnfrage() {
+            const input = document.getElementById('aiPromptInput');
+            const query = input.value.trim();
+            if (!query) return;
+            await frageAi('custom');
+        }
+
+        function starteOfflineModus() {
+            isFirebaseConnected = false;
+            const badge = document.getElementById('datenquelleBadge');
+            badge.innerText = "Lokaler Modus";
+            badge.className = "inline-flex items-center gap-1.5 text-[11px] px-2.5 py-0.5 rounded-full font-mono bg-amber-500/10 text-amber-400 border border-amber-500/20";
+            
+            const gespeicherteProjekte = localStorage.getItem('lokale_projekte');
+            projekte = gespeicherteProjekte ? JSON.parse(gespeicherteProjekte) : [];
+
+            const gespeicherteLogs = localStorage.getItem('lokale_logs');
+            logs = gespeicherteLogs ? JSON.parse(gespeicherteLogs) : [{ text: "Board im Offline-Modus gestartet.", timestamp: Date.now(), user: "System" }];
+            
+            renderBoard();
+            renderLogs();
+        }
+
+        async function verbindeMitFirebase(config) {
+            const badge = document.getElementById('datenquelleBadge');
+            try {
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(config);
+                }
+                
+                db = firebase.firestore();
+                auth = firebase.auth();
+
+                await auth.signInAnonymously();
+                isFirebaseConnected = true;
+
+                badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Live Cloud Active`;
+                badge.className = "inline-flex items-center gap-1.5 text-[11px] px-2.5 py-0.5 rounded-full font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+
+                if (unsubscribeProjekte) unsubscribeProjekte();
+                if (unsubscribeLogs) unsubscribeLogs();
+
+                // Live-Sync Projekte
+                unsubscribeProjekte = db.collection('projekte').onSnapshot(snapshot => {
+                    let tempProjekte = [];
+                    snapshot.forEach(doc => {
+                        tempProjekte.push({ id: doc.id, ...doc.data() });
+                    });
+                    projekte = tempProjekte;
+                    renderBoard();
+                }, error => {
+                    console.error("Firestore Snapshot Fehler:", error);
+                    badge.innerText = "Firestore blockiert (" + error.code + ")";
+                    badge.className = "inline-flex items-center gap-1.5 text-[11px] px-2.5 py-0.5 rounded-full font-mono bg-rose-500/10 text-rose-400 border border-rose-500/20";
+                });
+
+                // Live-Sync Logs
+                unsubscribeLogs = db.collection('logs').orderBy('timestamp', 'desc').limit(50).onSnapshot(snapshot => {
+                    let tempLogs = [];
+                    snapshot.forEach(doc => {
+                        tempLogs.push({ id: doc.id, ...doc.data() });
+                    });
+                    logs = tempLogs;
+                    renderLogs();
+                }, error => {
+                    console.error("Firestore Logs Fehler:", error);
+                });
+
+            } catch (err) {
+                console.error("Firebase Verbindungsfehler:", err);
+                badge.innerText = "Verbindungsfehler";
+                badge.className = "inline-flex items-center gap-1.5 text-[11px] px-2.5 py-0.5 rounded-full font-mono bg-rose-500/10 text-rose-400 border border-rose-500/20";
+                
+                setTimeout(() => {
+                    if(!isFirebaseConnected) starteOfflineModus();
+                }, 4000);
+            }
+        }
+
+        function speichereLokal() {
+            if (!isFirebaseConnected) {
+                localStorage.setItem('lokale_projekte', JSON.stringify(projekte));
+                localStorage.setItem('lokale_logs', JSON.stringify(logs));
+            }
+        }
+
+        function toggleShowAllFertig() {
+            showAllFertig = !showAllFertig;
+            renderBoard();
+        }
+
+        function renderBoard() {
+            const listen = {
+                neu: document.getElementById('liste-neu'),
+                arbeit: document.getElementById('liste-arbeit'),
+                test: document.getElementById('liste-test'),
+                fertig: document.getElementById('liste-fertig')
+            };
+
+            Object.values(listen).forEach(l => { if (l) l.innerHTML = ''; });
+
+            const gefilterteProjekte = projekte.filter(p => {
+                const queryStr = suchFilter.toLowerCase();
+                const mitarbeiterStr = (p.mitarbeiter || "").toLowerCase();
+                return p.titel.toLowerCase().includes(queryStr) || 
+                       (p.beschreibung && p.beschreibung.toLowerCase().includes(queryStr)) || 
+                       mitarbeiterStr.includes(queryStr) ||
+                       p.kategorie.toLowerCase().includes(queryStr);
+            });
+
+            // Standard columns rendering
+            gefilterteProjekte.forEach(projekt => {
+                if (projekt.status !== 'fertig') {
+                    const karte = erstelleKartenHTML(projekt);
+                    if (listen[projekt.status]) {
+                        listen[projekt.status].appendChild(karte);
+                    }
+                }
+            });
+
+            // Special handling for 'fertig' (Completed) items collapse/expand
+            const fertigeProjekte = gefilterteProjekte.filter(p => p.status === 'fertig');
+            const maxVisibleFertig = 3;
+            
+            // Sort finished items by ref or ID descending so latest completed items are first
+            fertigeProjekte.sort((a, b) => (Number(b.ref) || 0) - (Number(a.ref) || 0));
+
+            const anzuzeigendeFertig = showAllFertig ? fertigeProjekte : fertigeProjekte.slice(0, maxVisibleFertig);
+
+            anzuzeigendeFertig.forEach(projekt => {
+                const karte = erstelleKartenHTML(projekt);
+                listen.fertig.appendChild(karte);
+            });
+
+            // Toggle button logic for completed projects
+            const toggleContainer = document.getElementById('fertigToggleContainer');
+            const btnText = document.getElementById('textToggleFertig');
+            const iconToggle = document.getElementById('iconToggleFertig');
+
+            if (fertigeProjekte.length > maxVisibleFertig) {
+                toggleContainer.classList.remove('hidden');
+                if (showAllFertig) {
+                    btnText.innerText = `Einklappen (Nur die letzten ${maxVisibleFertig} anzeigen)`;
+                    iconToggle.style.transform = 'rotate(180deg)';
+                } else {
+                    const verbleibend = fertigeProjekte.length - maxVisibleFertig;
+                    btnText.innerText = `+ ${verbleibend} weitere fertige Projekte anzeigen`;
+                    iconToggle.style.transform = 'rotate(0deg)';
+                }
+            } else {
+                toggleContainer.classList.add('hidden');
+            }
+
+            aktualisiereStatistik();
+            lucide.createIcons();
+        }
+
+        function fuegeUnterpunktHinzu(wert = "", erledigt = false) {
+            const container = document.getElementById('unterpunkteFormContainer');
+            
+            const div = document.createElement('div');
+            div.className = 'flex items-center gap-2 unterpunkt-item';
+            div.innerHTML = `
+                <input type="checkbox" ${erledigt ? 'checked' : ''} class="w-4 h-4 accent-indigo-500 rounded bg-slate-900 border-slate-700">
+                <input type="text" value="${escapeHTML(wert)}" placeholder="z. B. CI-Prüfung durchgeführt" class="flex-1 px-3 py-1.5 bg-slate-900 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 outline-none focus:border-indigo-500">
+                <button type="button" onclick="this.parentElement.remove()" class="p-1.5 hover:bg-rose-500/10 rounded-lg text-slate-400 hover:text-rose-400 transition-colors">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+            `;
+            container.appendChild(div);
+            lucide.createIcons();
+        }
+
+        function sammleUnterpunkte() {
+            const container = document.getElementById('unterpunkteFormContainer');
+            const unterpunkte = [];
+            container.querySelectorAll('.unterpunkt-item').forEach(item => {
+                const checked = item.querySelector('input[type="checkbox"]').checked;
+                const text = item.querySelector('input[type="text"]').value.trim();
+                if (text) {
+                    unterpunkte.push({ text, erledigt: checked });
+                }
+            });
+            return unterpunkte;
+        }
+
+        async function toggleUnterpunktQuick(projektId, index, erledigt) {
+            const projekt = projekte.find(p => p.id == projektId);
+            if (!projekt) return;
+
+            projekt.unterpunkte[index].erledigt = erledigt;
+
+            if (isFirebaseConnected) {
+                try {
+                    await db.collection('projekte').doc(projektId).update({ unterpunkte: projekt.unterpunkte });
+                } catch (err) {
+                    console.error("Fehler beim Aktualisieren des Unterpunkts:", err);
+                }
+            } else {
+                speichereLokal();
+                renderBoard();
+            }
+        }
+
+        function erstelleKartenHTML(projekt) {
+            const card = document.createElement('div');
+            card.setAttribute('draggable', 'true');
+            card.className = 'glass-card p-4 rounded-xl shadow-lg transition-all duration-300 cursor-grab active:cursor-grabbing border-l-4 relative group hover:-translate-y-0.5';
+            card.id = `card-${projekt.id}`;
+
+            card.addEventListener('dragstart', (e) => dragStart(e, projekt.id));
+            card.addEventListener('dragend', dragEnd);
+
+            if (projekt.prio === 'prio-hoch') card.classList.add('border-l-rose-500');
+            else if (projekt.prio === 'prio-mittel') card.classList.add('border-l-amber-400');
+            else card.classList.add('border-l-emerald-400');
+
+            const mitarbeiterName = projekt.mitarbeiter || "Unzugewiesen";
+            const initials = getInitials(mitarbeiterName);
+            const avatarColor = getAvatarColor(mitarbeiterName);
+            const deadlineBadgeHTML = getDeadlineBadge(projekt.deadline, projekt.status);
+
+            const unterpunkte = projekt.unterpunkte || [];
+            const gesamtTasks = unterpunkte.length;
+            const erledigteTasks = unterpunkte.filter(t => t.erledigt).length;
+            const progressProzent = gesamtTasks > 0 ? Math.round((erledigteTasks / gesamtTasks) * 100) : 0;
+
+            let checklisteHTML = "";
+            let progressHTML = "";
+
+            if (gesamtTasks > 0) {
+                progressHTML = `
+                    <div class="mt-3.5">
+                        <div class="flex items-center justify-between text-[10px] font-mono text-slate-400 mb-1">
+                            <span>Checkliste</span>
+                            <span>${erledigteTasks}/${gesamtTasks} (${progressProzent}%)</span>
+                        </div>
+                        <div class="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden border border-slate-800">
+                            <div class="bg-gradient-to-r from-blue-500 to-indigo-500 h-1.5 rounded-full transition-all duration-300" style="width: ${progressProzent}%"></div>
+                        </div>
+                    </div>
+                `;
+
+                let checkItems = "";
+                unterpunkte.forEach((up, idx) => {
+                    checkItems += `
+                        <label class="flex items-start gap-2 text-xs text-slate-300 cursor-pointer hover:text-white mt-1.5 group/chk">
+                            <input type="checkbox" ${up.erledigt ? 'checked' : ''} 
+                                   onchange="toggleUnterpunktQuick('${projekt.id}', ${idx}, this.checked)"
+                                   class="mt-0.5 w-3.5 h-3.5 accent-indigo-500 rounded bg-slate-900 border-slate-700">
+                            <span class="${up.erledigt ? 'line-through text-slate-500' : ''} leading-tight group-hover/chk:text-indigo-300 transition-colors">${escapeHTML(up.text)}</span>
+                        </label>
+                    `;
+                });
+
+                checklisteHTML = `
+                    <div class="mt-3 pt-3 border-t border-slate-800/80">
+                        <div class="space-y-1">
+                            ${checkItems}
+                        </div>
+                    </div>
+                `;
+            }
+
+            const beschreibungText = projekt.beschreibung ? escapeHTML(projekt.beschreibung) : `<span class="text-slate-500 italic">Keine Zusatzbeschreibung hinterlegt.</span>`;
+
+            card.innerHTML = `
+                <div class="absolute top-3 right-3 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900/90 p-1 rounded-lg border border-slate-700">
+                    <button onclick="bearbeiteProjekt('${projekt.id}')" class="p-1 hover:bg-slate-800 rounded text-slate-400 hover:text-white transition-colors" title="Bearbeiten">
+                        <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
+                    </button>
+                    <button onclick="frageLöschen('${projekt.id}')" class="p-1 hover:bg-rose-500/20 rounded text-slate-400 hover:text-rose-400 transition-colors" title="Löschen">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                    </button>
+                </div>
+
+                <h3 class="font-bold text-slate-100 pr-14 text-xs leading-snug tracking-wide">${escapeHTML(projekt.titel)}</h3>
+                <p class="text-slate-400 text-xs mt-1.5 line-clamp-2 leading-relaxed">${beschreibungText}</p>
+                
+                ${progressHTML}
+                ${checklisteHTML}
+
+                <div class="mt-3.5 pt-2.5 border-t border-slate-800/60 flex items-center justify-between gap-2 flex-wrap">
+                    <span class="bg-indigo-500/10 text-indigo-300 text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full border border-indigo-500/20 uppercase tracking-wider">${escapeHTML(projekt.kategorie)}</span>
+                    <span class="text-[10px] font-mono text-slate-500">Ref: #${projekt.ref}</span>
+                </div>
+
+                <div class="mt-2.5 pt-2 border-t border-slate-800/40 flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-1.5">
+                        ${deadlineBadgeHTML}
+                    </div>
+                    <div class="${avatarColor} w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold font-mono border shadow-md relative" title="${escapeHTML(mitarbeiterName)}">
+                        ${escapeHTML(initials)}
+                    </div>
+                </div>
+
+                <div class="mt-3 block md:hidden pt-2 border-t border-slate-800 flex items-center gap-1 justify-end">
+                    <label class="text-[10px] font-mono text-slate-400">Status:</label>
+                    <select onchange="verschiebeManuell('${projekt.id}', this.value)" class="text-[10px] bg-slate-900 border border-slate-700 rounded px-2 py-1 text-slate-200 font-mono focus:outline-none">
+                        <option value="neu" ${projekt.status === 'neu' ? 'selected' : ''}>Neu</option>
+                        <option value="arbeit" ${projekt.status === 'arbeit' ? 'selected' : ''}>In Arbeit</option>
+                        <option value="test" ${projekt.status === 'test' ? 'selected' : ''}>Im Test</option>
+                        <option value="fertig" ${projekt.status === 'fertig' ? 'selected' : ''}>Fertig</option>
+                    </select>
+                </div>
+            `;
+            return card;
+        }
+
+        async function logActivity(text) {
+            const neuerEintrag = {
+                text: text,
+                timestamp: Date.now(),
+                user: isFirebaseConnected ? "Teammitglied" : "Du (Lokal)"
+            };
+
+            if (isFirebaseConnected) {
+                try {
+                    await db.collection('logs').add(neuerEintrag);
+                } catch (e) {
+                    console.error("Log-Fehler", e);
+                }
+            } else {
+                logs.unshift(neuerEintrag);
+                speichereLokal();
+                renderLogs();
+            }
+        }
+
+        function dragStart(e, id) {
+            e.dataTransfer.setData('text/plain', id);
+            setTimeout(() => {
+                const target = document.getElementById(`card-${id}`);
+                if (target) target.classList.add('opacity-30', 'scale-95');
+            }, 0);
+        }
+
+        function dragEnd(e) {
+            e.target.classList.remove('opacity-30', 'scale-95');
+            document.querySelectorAll('.column-container').forEach(c => {
+                c.classList.remove('border-indigo-500/60', 'bg-indigo-950/20');
+            });
+        }
+
+        function allowDrop(e) {
+            e.preventDefault();
+        }
+
+        function dragEnter(e) {
+            e.preventDefault();
+            const col = e.target.closest('.column-container');
+            if (col) {
+                col.classList.add('border-indigo-500/60', 'bg-indigo-950/20');
+            }
+        }
+
+        function dragLeave(e) {
+            const col = e.target.closest('.column-container');
+            if (col && !col.contains(e.relatedTarget)) {
+                col.classList.remove('border-indigo-500/60', 'bg-indigo-950/20');
+            }
+        }
+
+        async function drop(e, zielStatus) {
+            e.preventDefault();
+            const id = e.dataTransfer.getData('text/plain');
+            const projekt = projekte.find(p => p.id == id);
+
+            if (projekt && projekt.status !== zielStatus) {
+                const alterStatus = projekt.status;
+                const statusMap = { neu: 'Neu', arbeit: 'In Arbeit', test: 'Im Test', fertig: 'Fertig' };
+                const logText = `"${projekt.titel}" von "${statusMap[alterStatus]}" ➔ "${statusMap[zielStatus]}" verschoben.`;
+
+                if (isFirebaseConnected) {
+                    try {
+                        await db.collection('projekte').doc(id).update({ status: zielStatus });
+                        logActivity(logText);
+                    } catch (err) {
+                        console.error("Verschiebe-Fehler:", err);
+                    }
+                } else {
+                    projekt.status = zielStatus;
+                    logActivity(logText);
+                    renderBoard();
+                }
+            }
+        }
+
+        async function verschiebeManuell(id, zielStatus) {
+            const projekt = projekte.find(p => p.id == id);
+            if (projekt && projekt.status !== zielStatus) {
+                const alterStatus = projekt.status;
+                const statusMap = { neu: 'Neu', arbeit: 'In Arbeit', test: 'Im Test', fertig: 'Fertig' };
+                const logText = `"${projekt.titel}" manuell ➔ "${statusMap[zielStatus]}" verschoben.`;
+
+                if (isFirebaseConnected) {
+                    try {
+                        await db.collection('projekte').doc(id).update({ status: zielStatus });
+                        logActivity(logText);
+                    } catch (err) {
+                        console.error(err);
+                    }
+                } else {
+                    projekt.status = zielStatus;
+                    logActivity(logText);
+                    renderBoard();
+                }
+            }
+        }
+
+        document.getElementById('projektForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const editId = document.getElementById('editId').value;
+            const titel = document.getElementById('titel').value;
+            const beschreibung = document.getElementById('beschreibung').value;
+            const mitarbeiter = document.getElementById('mitarbeiter').value;
+            const deadline = document.getElementById('deadline').value;
+            const kategorie = document.getElementById('kategorie').value;
+            const prio = document.getElementById('prio').value;
+            const unterpunkte = sammleUnterpunkte();
+
+            const projektDaten = { titel, beschreibung, mitarbeiter, deadline, kategorie, prio, unterpunkte };
+
+            if (editId) {
+                if (isFirebaseConnected) {
+                    try {
+                        await db.collection('projekte').doc(editId).update(projektDaten);
+                        logActivity(`Projekt "${titel}" aktualisiert.`);
+                    } catch (err) {
+                        console.error(err);
+                    }
+                } else {
+                    const projekt = projekte.find(p => p.id == editId);
+                    if (projekt) {
+                        Object.assign(projekt, projektDaten);
+                        logActivity(`Projekt "${titel}" aktualisiert.`);
+                        renderBoard();
+                    }
+                }
+            } else {
+                const refNum = getNextRef();
+                const neuesProjekt = { ...projektDaten, status: 'neu', ref: refNum };
+
+                if (isFirebaseConnected) {
+                    try {
+                        await db.collection('projekte').add(neuesProjekt);
+                        logActivity(`Projekt "${titel}" (#${refNum}) von ${mitarbeiter} angelegt.`);
+                    } catch (err) {
+                        console.error(err);
+                    }
+                } else {
+                    neuesProjekt.id = Date.now().toString();
+                    projekte.push(neuesProjekt);
+                    logActivity(`Projekt "${titel}" (#${refNum}) von ${mitarbeiter} angelegt.`);
+                    renderBoard();
+                }
+            }
+
+            schließeFormularModal();
+        });
+
+        function bearbeiteProjekt(id) {
+            const projekt = projekte.find(p => p.id == id);
+            if (!projekt) return;
+
+            setzeFormularZurueck();
+
+            document.getElementById('editId').value = projekt.id;
+            document.getElementById('titel').value = projekt.titel;
+            document.getElementById('beschreibung').value = projekt.beschreibung || "";
+            document.getElementById('mitarbeiter').value = projekt.mitarbeiter || "";
+            document.getElementById('deadline').value = projekt.deadline || "";
+            document.getElementById('kategorie').value = projekt.kategorie;
+            document.getElementById('prio').value = projekt.prio;
+
+            if (projekt.unterpunkte && projekt.unterpunkte.length > 0) {
+                projekt.unterpunkte.forEach(up => {
+                    fuegeUnterpunktHinzu(up.text, up.erledigt);
+                });
+            }
+
+            document.getElementById('formularTitel').innerText = "Projekt bearbeiten";
+            document.getElementById('modalIcon').setAttribute('data-lucide', 'edit-3');
+            document.getElementById('btnText').innerText = "Speichern";
+            
+            lucide.createIcons();
+            document.getElementById('formularModal').classList.remove('hidden');
+        }
+
+        function setzeFormularZurueck() {
+            document.getElementById('projektForm').reset();
+            document.getElementById('editId').value = "";
+            document.getElementById('unterpunkteFormContainer').innerHTML = "";
+            document.getElementById('formularTitel').innerText = "Neues IT-Projekt erfassen";
+            document.getElementById('modalIcon').setAttribute('data-lucide', 'plus-circle');
+            document.getElementById('btnText').innerText = "Anlegen";
+            lucide.createIcons();
+        }
+
+        function frageLöschen(id) {
+            deleteCandidateId = id;
+            document.getElementById('deleteModal').classList.remove('hidden');
+        }
+
+        function schließeDeleteModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+            deleteCandidateId = null;
+        }
+
+        document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+            if (deleteCandidateId !== null) {
+                const projekt = projekte.find(p => p.id == deleteCandidateId);
+                const name = projekt ? projekt.titel : "Unbekannt";
+
+                if (isFirebaseConnected) {
+                    try {
+                        await db.collection('projekte').doc(deleteCandidateId).delete();
+                        logActivity(`Projekt "${name}" gelöscht.`);
+                    } catch (e) {
+                        console.error(e);
+                    }
+                } else {
+                    projekte = projekte.filter(p => p.id != deleteCandidateId);
+                    logActivity(`Projekt "${name}" gelöscht.`);
+                    renderBoard();
+                }
+
+                schließeDeleteModal();
+            }
+        });
+
+        function renderLogs() {
+            const listContainer = document.getElementById('verlaufListe');
+            const countContainer = document.getElementById('verlaufZaehler');
+            if (!listContainer) return;
+
+            listContainer.innerHTML = '';
+            countContainer.innerText = `${logs.length} Einträge`;
+
+            if (logs.length === 0) {
+                listContainer.innerHTML = `<div class="text-center py-12 text-slate-500 font-mono text-xs">Noch keine Aktivitäten registriert.</div>`;
+                return;
+            }
+
+            logs.forEach(log => {
+                const timeStr = formatLogTime(log.timestamp);
+                const entry = document.createElement('div');
+                entry.className = 'border-b border-slate-800/80 pb-2.5 text-xs font-mono';
+                entry.innerHTML = `
+                    <div class="flex justify-between text-[10px] text-slate-500 mb-1">
+                        <span class="text-indigo-400">${escapeHTML(log.user || 'User')}</span>
+                        <span>${timeStr}</span>
+                    </div>
+                    <p class="text-slate-300 leading-relaxed">${escapeHTML(log.text)}</p>
+                `;
+                listContainer.appendChild(entry);
+            });
+        }
+
+        function toggleVerlauf() {
+            const drawer = document.getElementById('verlaufDrawer');
+            if (drawer) drawer.classList.toggle('translate-x-full');
+        }
+
+        async function leereVerlauf() {
+            if (isFirebaseConnected) {
+                try {
+                    const snapshot = await db.collection('logs').get();
+                    const batch = db.batch();
+                    snapshot.docs.forEach(doc => batch.delete(doc.ref));
+                    await batch.commit();
+                } catch (e) {
+                    console.error(e);
+                }
+            } else {
+                logs = [];
+                renderLogs();
+            }
+        }
+
+        function getDeadlineBadge(deadline, status) {
+            if (!deadline) return `<span class="text-slate-500 text-[10px] font-mono">Kein Datum</span>`;
+            const today = new Date(); today.setHours(0,0,0,0);
+            const dl = new Date(deadline);
+            const dateStr = formatDate(deadline);
+
+            if (status !== 'fertig' && dl < today) {
+                return `<span class="bg-rose-500/10 text-rose-400 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border border-rose-500/20">Überfällig</span>`;
+            } else if (status === 'fertig') {
+                return `<span class="bg-emerald-500/10 text-emerald-400 text-[10px] font-mono font-medium px-2 py-0.5 rounded-full border border-emerald-500/20">Beendet</span>`;
+            } else {
+                return `<span class="bg-slate-800 text-slate-400 text-[10px] font-mono font-medium px-2 py-0.5 rounded-full border border-slate-700">${dateStr}</span>`;
+            }
+        }
+
+        function getInitials(name) {
+            if (!name) return "??";
+            const parts = name.trim().split(/\s+/);
+            if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+            return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+        }
+
+        function getAvatarColor(name) {
+            const colors = [
+                'bg-indigo-500/20 text-indigo-300 border-indigo-500/30',
+                'bg-blue-500/20 text-blue-300 border-blue-500/30',
+                'bg-purple-500/20 text-purple-300 border-purple-500/30',
+                'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+                'bg-amber-500/20 text-amber-300 border-amber-500/30'
+            ];
+            let sum = 0; for (let i = 0; i < name.length; i++) sum += name.charCodeAt(i);
+            return colors[sum % colors.length];
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const parts = dateStr.split('-');
+            if (parts.length === 3) return `${parts[2]}.${parts[1]}.${parts[0]}`;
+            return dateStr;
+        }
+
+        function formatLogTime(timestamp) {
+            if (!timestamp) return '';
+            const d = new Date(timestamp);
+            return d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) + ' (' + d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' }) + ')';
+        }
+
+        function getNextRef() {
+            if (projekte.length === 0) return 210;
+            const refs = projekte.map(p => Number(p.ref) || 0);
+            return Math.max(...refs) + 1;
+        }
+
+        function filterProjekte() {
+            const input = document.getElementById('suche');
+            if (input) { suchFilter = input.value; renderBoard(); }
+        }
+
+        function aktualisiereStatistik() {
+            const counts = { neu: 0, arbeit: 0, test: 0, fertig: 0 };
+            projekte.forEach(p => { if (counts[p.status] !== undefined) counts[p.status]++; });
+            document.getElementById('zaehler-neu').innerText = counts.neu;
+            document.getElementById('zaehler-arbeit').innerText = counts.arbeit;
+            document.getElementById('zaehler-test').innerText = counts.test;
+            document.getElementById('zaehler-fertig').innerText = counts.fertig;
+            document.getElementById('stat-gesamt').innerText = projekte.length;
+            document.getElementById('stat-arbeit').innerText = counts.arbeit;
+            document.getElementById('stat-test').innerText = counts.test;
+            document.getElementById('stat-fertig').innerText = counts.fertig;
+        }
+
+        function escapeHTML(str) {
+            if (!str) return "";
+            return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
+        }
+    </script>
+</body>
+</html>
