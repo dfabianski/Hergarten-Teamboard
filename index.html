@@ -3,20 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hergarten-Teamboard | Digital Neuzeit OS</title>
+    <title>Hergarten-Teamboard | Google Sheets Powered</title>
     
     <!-- External Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background-color: #0b0f19;
             color: #f1f5f9;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
         }
 
         .bg-grid-cyber {
@@ -27,30 +31,28 @@
         }
 
         .glass-panel {
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            contain: layout style;
         }
 
         .glass-card {
-            background: rgba(17, 23, 38, 0.95);
+            background: rgba(17, 24, 39, 0.95);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
-            contain: layout style;
         }
 
         .glass-card:hover {
             transform: translateY(-2px);
             border-color: rgba(56, 189, 248, 0.4);
-            box-shadow: 0 8px 24px -4px rgba(56, 189, 248, 0.12);
+            box-shadow: 0 8px 24px -4px rgba(56, 189, 248, 0.15);
         }
 
         .glass-modal {
-            background: rgba(15, 23, 42, 0.96);
+            background: rgba(15, 23, 42, 0.98);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
         }
@@ -60,14 +62,6 @@
             background-color: #f8fafc;
             color: #0f172a;
         }
-        
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
 
         body.light-theme .glass-panel {
             background: rgba(255, 255, 255, 0.95);
@@ -75,11 +69,12 @@
             color: #0f172a;
             box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
         }
+
         body.light-theme .glass-card {
             background: #ffffff;
-            border-color: #cbd5e1;
+            border-color: #e2e8f0;
             color: #0f172a;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
 
         body.light-theme .glass-modal {
@@ -88,22 +83,23 @@
             color: #0f172a;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
         }
+
         body.light-theme .text-white {
             color: #0f172a !important;
         }
+
         body.light-theme .text-slate-300,
         body.light-theme .text-slate-200 {
             color: #1e293b !important;
         }
+
         body.light-theme .text-slate-400,
         body.light-theme .text-slate-500 {
             color: #475569 !important;
         }
 
         body.light-theme .bg-slate-900,
-        body.light-theme .bg-slate-950,
-        body.light-theme .bg-indigo-950,
-        body.light-theme .bg-cyan-950 {
+        body.light-theme .bg-slate-950 {
             background-color: #f1f5f9 !important;
             border-color: #cbd5e1 !important;
             color: #0f172a !important;
@@ -117,39 +113,34 @@
             border-color: #cbd5e1 !important;
         }
 
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.2); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.4); }
-
         .drag-over {
             border-color: #38bdf8 !important;
-            background-color: rgba(56, 189, 248, 0.05) !important;
+            background-color: rgba(56, 189, 248, 0.08) !important;
         }
-    </style>
 
-    <!-- Firebase SDK Scripts (Compat for speed and stability) -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
 </head>
 <body class="text-slate-100 font-sans min-h-screen pb-16 bg-grid-cyber selection:bg-cyan-500 selection:text-black">
 
-    <canvas id="bgCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-30"></canvas>
+    <canvas id="bgCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-25"></canvas>
 
-    <!-- Toast Notification Overlay -->
+    <!-- Toast Notification Container -->
     <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
+    <!-- Header Navigation -->
     <header class="sticky top-0 z-40 glass-panel border-b border-slate-800/80 shadow-2xl">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 
+                <!-- Logo & Brand -->
                 <div class="flex items-center justify-between md:justify-start gap-4">
                     <div class="flex items-center gap-3">
                         <div class="relative group cursor-pointer" onclick="toggleTheme()" title="Design umschalten (Dark / Light)">
-                            <div class="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-indigo-500 rounded-xl blur opacity-40 group-hover:opacity-100 transition duration-300"></div>
-                            <div class="relative p-2.5 bg-slate-900 rounded-xl border border-cyan-500/30 text-cyan-400 shadow-lg transition-transform group-hover:scale-105 flex items-center justify-center">
-                                <i data-lucide="cpu" class="w-5 h-5"></i>
+                            <div class="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-xl blur opacity-40 group-hover:opacity-100 transition duration-300"></div>
+                            <div class="relative p-2.5 bg-slate-900 rounded-xl border border-emerald-500/30 text-emerald-400 shadow-lg transition-transform group-hover:scale-105 flex items-center justify-center">
+                                <i data-lucide="sheet" class="w-5 h-5"></i>
                             </div>
                         </div>
 
@@ -157,42 +148,50 @@
                             <div class="flex items-center gap-2">
                                 <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-white flex items-center gap-2 font-mono">
                                     Hergarten-Teamboard
-                                    <span class="text-[10px] font-mono tabular-nums px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-500/40 font-semibold">v4.0 Fast</span>
+                                    <span class="text-[10px] font-mono tabular-nums px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-500/40 font-semibold">Sheets Collab</span>
                                 </h1>
                             </div>
                             <div class="flex items-center gap-2 mt-0.5">
-                                <span class="inline-flex items-center gap-1.5 text-[10px] px-2 py-0.5 rounded-full font-mono transition-all bg-emerald-950/80 text-emerald-400 border border-emerald-500/30" id="datenquelleBadge">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> Synchronisiert
-                                </span>
+                                <button onclick="oeffneDiagnoseModal()" class="inline-flex items-center gap-1.5 text-[10px] px-2.5 py-0.5 rounded-full font-mono transition-all bg-emerald-950/80 text-emerald-400 border border-emerald-500/40 shadow-sm cursor-pointer hover:border-emerald-400" id="datenquelleBadge" title="Status prüfen & Diagnose öffnen">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Google Tabelle verbunden
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
                 
+                <!-- User Profile & Action Buttons & Search -->
                 <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full md:w-auto">
-                    <div class="relative w-full sm:w-56 shrink-0">
+                    <!-- Search Input -->
+                    <div class="relative w-full sm:w-52 shrink-0">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400">
                             <i data-lucide="search" class="w-4 h-4"></i>
                         </span>
-                        <input type="text" id="suche" placeholder="Projekte durchsuchen..." autocomplete="off" 
-                               class="w-full pl-9 pr-3 py-2 bg-slate-900/80 border border-slate-700/80 focus:border-cyan-400 rounded-xl text-xs text-slate-100 placeholder-slate-500 transition-all outline-none focus:ring-2 focus:ring-cyan-500/20 shadow-inner"
+                        <input type="text" id="suche" placeholder="Aufgaben durchsuchen..." autocomplete="off" 
+                               class="w-full pl-9 pr-3 py-2 bg-slate-900/80 border border-slate-700/80 focus:border-cyan-400 rounded-xl text-xs text-slate-100 placeholder-slate-500 transition-all outline-none focus:ring-2 focus:ring-cyan-500/20"
                                oninput="filterProjekte()">
                     </div>
 
+                    <!-- User Profile Button -->
+                    <button onclick="oeffneUserModal()" class="flex items-center gap-2 px-3 py-1.5 bg-slate-900/90 border border-slate-700 hover:border-cyan-400 rounded-xl transition-all shadow-sm shrink-0" title="Benutzerprofil wechseln / sperren">
+                        <div class="w-6 h-6 rounded-lg bg-gradient-to-tr from-cyan-500 to-emerald-400 text-slate-950 font-bold text-[11px] flex items-center justify-center font-mono" id="userAvatarInitial">?</div>
+                        <div class="text-left">
+                            <div class="text-[11px] font-bold text-slate-200 leading-tight" id="userNameDisplay">Nicht angemeldet</div>
+                            <div class="text-[9px] text-slate-400 leading-none" id="userRoleDisplay">Passwortgeschützt</div>
+                        </div>
+                        <i data-lucide="lock" class="w-3 h-3 text-slate-400 ml-0.5"></i>
+                    </button>
+
+                    <!-- Actions -->
                     <div class="flex items-center gap-2 w-full sm:w-auto overflow-x-auto no-scrollbar py-0.5">
-                        <button onclick="oeffneFormularModal()" class="relative group overflow-hidden bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold py-2 px-3.5 rounded-xl text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shrink-0">
+                        <button onclick="oeffneFormularModal()" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold py-2 px-3.5 rounded-xl text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shrink-0">
                             <i data-lucide="plus-circle" class="w-4 h-4"></i>
-                            <span class="whitespace-nowrap">Projekt erfassen</span>
-                        </button>
-                        
-                        <button onclick="toggleAiModal()" class="relative bg-slate-900 hover:bg-slate-800 text-indigo-300 font-semibold py-2 px-3 rounded-xl text-xs border border-indigo-500/30 shadow-sm flex items-center justify-center gap-1.5 transition-all group shrink-0">
-                            <i data-lucide="bot" class="w-4 h-4 text-indigo-400 group-hover:scale-110 transition-transform"></i>
-                            <span class="whitespace-nowrap">AI Advisor</span>
+                            <span class="whitespace-nowrap">Neue Aufgabe</span>
                         </button>
 
-                        <button onclick="toggleVerlauf()" class="relative bg-slate-900 hover:bg-slate-800 text-slate-200 font-semibold py-2 px-3 rounded-xl text-xs border border-slate-700/80 shadow-sm flex items-center justify-center gap-1.5 transition-all shrink-0">
-                            <i data-lucide="activity" class="w-4 h-4 text-cyan-400"></i>
-                            <span class="whitespace-nowrap">Verlauf</span>
+                        <button onclick="synchronisiereManuell()" class="bg-slate-900 hover:bg-slate-800 text-slate-200 font-semibold py-2 px-3 rounded-xl text-xs border border-slate-700/80 shadow-sm flex items-center justify-center gap-1.5 transition-all shrink-0" title="Jetzt mit Google Tabelle synchronisieren">
+                            <i data-lucide="refresh-cw" class="w-4 h-4 text-cyan-400" id="syncIcon"></i>
+                            <span class="whitespace-nowrap">Sync</span>
                         </button>
                     </div>
                 </div>
@@ -201,73 +200,70 @@
         </div>
     </header>
 
-    <!-- Initial Loading Overlay -->
-    <div id="initialLoader" class="max-w-7xl mx-auto px-4 sm:px-6 mt-20 text-center space-y-4">
-        <div class="inline-flex p-4 bg-cyan-950/60 rounded-2xl border border-cyan-500/30 text-cyan-400 animate-pulse">
-            <i data-lucide="loader-2" class="w-8 h-8 animate-spin"></i>
-        </div>
-        <p class="text-slate-400 text-xs font-mono">Teamboard & Synchro-Engine wird geladen...</p>
-    </div>
-
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 mt-8 relative z-10 hidden" id="mainContent">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 mt-6 relative z-10" id="mainContent">
         
-        <!-- Workspace Switcher Dropdown & Team Management -->
-        <div class="glass-panel p-3.5 rounded-2xl border border-slate-800/80 mb-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shadow-lg">
-            <div class="flex items-center gap-3 w-full sm:w-auto">
+        <!-- Workspace & Team Switcher Bar -->
+        <div class="glass-panel p-3.5 rounded-2xl border border-slate-800/80 mb-6 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 shadow-lg">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full md:w-auto">
                 <div class="flex items-center gap-2 shrink-0">
-                    <i data-lucide="users" class="w-4 h-4 text-cyan-400"></i>
-                    <label for="workspaceSelect" class="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider">
+                    <i data-lucide="users" class="w-4 h-4 text-emerald-400"></i>
+                    <span class="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider">
                         Aktives Team:
-                    </label>
+                    </span>
                 </div>
-                <div class="relative flex-1 sm:w-80">
-                    <div class="flex items-center gap-2 bg-slate-900 border border-cyan-500/40 rounded-xl px-3 py-2 text-xs font-mono font-bold text-cyan-300 shadow-sm hover:border-cyan-400 transition-colors">
-                        <i data-lucide="layers" class="w-4 h-4 text-cyan-400 shrink-0"></i>
-                        <select id="workspaceSelect" onchange="handleWorkspaceSelectChange(this.value)" 
-                                class="w-full bg-transparent text-cyan-300 font-mono font-bold text-xs outline-none cursor-pointer pr-2">
-                            <!-- Dynamically filled with teams -->
-                        </select>
-                    </div>
+                <div class="relative w-full sm:w-64">
+                    <select id="workspaceSelect" onchange="handleWorkspaceSelectChange(this.value)" 
+                            class="w-full bg-slate-900 border border-emerald-500/40 rounded-xl px-3 py-2 text-xs font-mono font-bold text-emerald-300 outline-none cursor-pointer">
+                        <!-- Filled dynamically -->
+                    </select>
+                </div>
+                <!-- Team Code Badge with Copy button -->
+                <div id="teamCodeBadgeContainer" class="flex items-center gap-1.5 bg-slate-900/90 border border-cyan-500/30 px-2.5 py-1.5 rounded-xl text-xs font-mono">
+                    <span class="text-slate-400 text-[10px]">Code:</span>
+                    <span class="font-bold text-cyan-300 select-all" id="currentTeamCodeDisplay">---</span>
+                    <button onclick="kopiereTeamCode()" class="text-slate-400 hover:text-cyan-300 ml-1 p-0.5 rounded transition-colors" title="Team-Code kopieren">
+                        <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                    </button>
                 </div>
             </div>
 
-            <div class="flex items-center gap-2 w-full sm:w-auto justify-end border-t sm:border-t-0 border-slate-800 pt-2 sm:pt-0">
-                <button onclick="oeffneTeamModal()" class="w-full sm:w-auto px-4 py-2 bg-slate-900 hover:bg-slate-800 text-slate-200 font-bold rounded-xl text-xs border border-slate-700/80 flex items-center justify-center gap-2 transition-all shadow-sm">
-                    <i data-lucide="settings-2" class="w-4 h-4 text-cyan-400"></i>
-                    <span>Team verwalten / Wechseln</span>
+            <div class="flex items-center gap-2 w-full md:w-auto justify-end">
+                <button onclick="oeffneTeamModal()" class="w-full sm:w-auto px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white rounded-xl text-xs border border-slate-700 flex items-center justify-center gap-1.5 transition-all shadow-sm">
+                    <i data-lucide="users" class="w-4 h-4 text-cyan-400"></i>
+                    <span>Team wechseln / Beitreten</span>
                 </button>
             </div>
         </div>
 
-        <!-- Metrics Bar -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <!-- Metrics Dashboard -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div class="glass-panel p-4 rounded-2xl border border-slate-800/80 hover:border-cyan-500/40 transition-all flex items-center gap-3.5 shadow-lg">
                 <div class="p-3 bg-cyan-950/80 rounded-xl text-cyan-400 border border-cyan-500/30">
                     <i data-lucide="layers" class="w-5 h-5"></i>
                 </div>
                 <div>
                     <div class="text-2xl font-extrabold tracking-tight font-mono tabular-nums text-white" id="stat-gesamt">0</div>
-                    <div class="text-[11px] text-slate-400 font-medium">Offene Aufgaben</div>
+                    <div class="text-[11px] text-slate-400 font-medium">Aufgaben gesamt</div>
                 </div>
             </div>
 
             <div class="glass-panel p-4 rounded-2xl border border-slate-800/80 hover:border-blue-500/40 transition-all flex items-center gap-3.5 shadow-lg">
                 <div class="p-3 bg-blue-950/80 rounded-xl text-blue-400 border border-blue-500/30">
-                    <i data-lucide="git-pull-request" class="w-5 h-5"></i>
+                    <i data-lucide="clock" class="w-5 h-5"></i>
                 </div>
                 <div>
                     <div class="text-2xl font-extrabold tracking-tight font-mono tabular-nums text-blue-400" id="stat-arbeit">0</div>
-                    <div class="text-[11px] text-slate-400 font-medium">In Umsetzung</div>
+                    <div class="text-[11px] text-slate-400 font-medium">In Bearbeitung</div>
                 </div>
             </div>
 
             <div class="glass-panel p-4 rounded-2xl border border-slate-800/80 hover:border-amber-500/40 transition-all flex items-center gap-3.5 shadow-lg">
                 <div class="p-3 bg-amber-950/80 rounded-xl text-amber-400 border border-amber-500/30">
-                    <i data-lucide="flask-conical" class="w-5 h-5"></i>
+                    <i data-lucide="help-circle" class="w-5 h-5"></i>
                 </div>
                 <div>
                     <div class="text-2xl font-extrabold tracking-tight font-mono tabular-nums text-amber-400" id="stat-test">0</div>
-                    <div class="text-[11px] text-slate-400 font-medium">Zur Freigabe</div>
+                    <div class="text-[11px] text-slate-400 font-medium">Zur Prüfung</div>
                 </div>
             </div>
 
@@ -277,65 +273,65 @@
                 </div>
                 <div>
                     <div class="text-2xl font-extrabold tracking-tight font-mono tabular-nums text-emerald-400" id="stat-fertig">0</div>
-                    <div class="text-[11px] text-slate-400 font-medium">Abgeschlossen</div>
+                    <div class="text-[11px] text-slate-400 font-medium">Erledigt</div>
                 </div>
             </div>
         </div>
 
-        <!-- Kanban Spalten -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
+        <!-- Kanban Board Columns -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-5 items-start">
             
-            <!-- Spalte: Neu -->
+            <!-- Column 1: Neu erfasst -->
             <div class="glass-panel rounded-2xl p-4 border border-slate-800/80 transition-all shadow-xl" id="col-neu">
-                <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-800">
+                <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
                     <span class="font-bold text-slate-300 flex items-center gap-2 text-xs uppercase tracking-wider font-mono">
                         <span class="w-2.5 h-2.5 rounded-full bg-slate-400 shadow-sm"></span> Neu erfasst
                     </span>
                     <span class="bg-slate-800 text-slate-300 text-xs font-mono tabular-nums font-bold px-2 py-0.5 rounded-full border border-slate-700" id="zaehler-neu">0</span>
                 </div>
-                <div class="space-y-3 min-h-[400px] rounded-xl p-1"
+                <div class="space-y-3 min-h-[380px] rounded-xl p-1.5 transition-colors"
                      ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'neu')">
                     <div class="karten-liste space-y-3" id="liste-neu"></div>
                 </div>
             </div>
 
-            <!-- Spalte: In Arbeit -->
+            <!-- Column 2: In Arbeit -->
             <div class="glass-panel rounded-2xl p-4 border border-slate-800/80 transition-all shadow-xl" id="col-arbeit">
-                <div class="flex items-center justify-between pb-3 mb-4 border-b border-cyan-500/50">
+                <div class="flex items-center justify-between pb-3 mb-3 border-b border-cyan-500/50">
                     <span class="font-bold text-cyan-300 flex items-center gap-2 text-xs uppercase tracking-wider font-mono">
                         <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span> In Arbeit
                     </span>
                     <span class="bg-cyan-950 text-cyan-300 text-xs font-mono tabular-nums font-bold px-2 py-0.5 rounded-full border border-cyan-500/40" id="zaehler-arbeit">0</span>
                 </div>
-                <div class="space-y-3 min-h-[400px] rounded-xl p-1"
+                <div class="space-y-3 min-h-[380px] rounded-xl p-1.5 transition-colors"
                      ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'arbeit')">
                     <div class="karten-liste space-y-3" id="liste-arbeit"></div>
                 </div>
             </div>
 
-            <!-- Spalte: Im Test -->
+            <!-- Column 3: Im Test / Zur Prüfung -->
             <div class="glass-panel rounded-2xl p-4 border border-slate-800/80 transition-all shadow-xl" id="col-test">
-                <div class="flex items-center justify-between pb-3 mb-4 border-b border-amber-500/50">
+                <div class="flex items-center justify-between pb-3 mb-3 border-b border-amber-500/50">
                     <span class="font-bold text-amber-300 flex items-center gap-2 text-xs uppercase tracking-wider font-mono">
-                        <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Zur Freigabe
+                        <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Zur Prüfung
                     </span>
                     <span class="bg-amber-950 text-amber-300 text-xs font-mono tabular-nums font-bold px-2 py-0.5 rounded-full border border-amber-500/40" id="zaehler-test">0</span>
                 </div>
-                <div class="space-y-3 min-h-[400px] rounded-xl p-1"
+                <div class="space-y-3 min-h-[380px] rounded-xl p-1.5 transition-colors"
                      ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'test')">
                     <div class="karten-liste space-y-3" id="liste-test"></div>
                 </div>
             </div>
 
-            <!-- Spalte: Fertig -->
+            <!-- Column 4: Fertig -->
             <div class="glass-panel rounded-2xl p-4 border border-slate-800/80 transition-all shadow-xl" id="col-fertig">
-                <div class="flex items-center justify-between pb-3 mb-4 border-b border-emerald-500/50">
+                <div class="flex items-center justify-between pb-3 mb-3 border-b border-emerald-500/50">
                     <span class="font-bold text-emerald-300 flex items-center gap-2 text-xs uppercase tracking-wider font-mono">
                         <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span> Fertig
                     </span>
                     <span class="bg-emerald-950 text-emerald-300 text-xs font-mono tabular-nums font-bold px-2 py-0.5 rounded-full border border-emerald-500/40" id="zaehler-fertig">0</span>
                 </div>
-                <div class="space-y-3 min-h-[400px] rounded-xl p-1"
+                <div class="space-y-3 min-h-[380px] rounded-xl p-1.5 transition-colors"
                      ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'fertig')">
                     <div class="karten-liste space-y-3" id="liste-fertig"></div>
                 </div>
@@ -344,32 +340,103 @@
         </div>
     </main>
 
-    
-    <!-- Team Management Modal -->
-    <div id="teamModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center z-50 hidden p-4">
-        <div class="glass-modal rounded-2xl p-6 w-full max-w-lg transform transition-all duration-300 shadow-2xl border border-indigo-500/40 space-y-5">
+    <!-- User Login & Profile Modal with Password Protection -->
+    <div id="userModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md flex items-center justify-center z-50 hidden p-4">
+        <div class="glass-modal rounded-2xl p-6 w-full max-w-md transform transition-all shadow-2xl border border-cyan-500/40 space-y-4">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                 <div class="flex items-center gap-2.5">
-                    <div class="p-2 bg-indigo-950 rounded-xl text-indigo-400 border border-indigo-500/30">
+                    <div class="p-2 bg-cyan-950 rounded-xl text-cyan-400 border border-cyan-500/30">
+                        <i data-lucide="shield-check" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-bold text-white font-mono uppercase tracking-wider">Benutzer-Sicherheit</h2>
+                        <p class="text-[11px] text-slate-400">Mit Passwort anmelden oder neuen Account erstellen</p>
+                    </div>
+                </div>
+                <button id="closeUserModalBtn" onclick="schließeUserModal()" class="p-1.5 hover:bg-slate-800 rounded-xl text-slate-400 hover:text-white transition-all hidden">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Login / Profil Form -->
+            <form onsubmit="verarbeiteBenutzerLogin(event)" class="space-y-3.5">
+                <div>
+                    <label for="userNameInput" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5">Dein Name *</label>
+                    <input type="text" id="userNameInput" placeholder="z. B. Dominik Fabianski" required 
+                           class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 focus:border-cyan-400 rounded-xl text-xs text-white outline-none">
+                </div>
+
+                <div>
+                    <label for="userPasswordInput" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5">Passwort / PIN *</label>
+                    <div class="relative">
+                        <input type="password" id="userPasswordInput" placeholder="Persönliches Passwort eingeben" required 
+                               class="w-full pl-3.5 pr-10 py-2.5 bg-slate-900 border border-slate-700 focus:border-cyan-400 rounded-xl text-xs text-white outline-none">
+                        <button type="button" onclick="togglePasswordVisibility('userPasswordInput')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-200">
+                            <i data-lucide="eye" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <p class="text-[10px] text-slate-500 mt-1">Sichert deinen Account vor fremdem Zugriff ab.</p>
+                </div>
+
+                <div>
+                    <label for="userRoleInput" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5">Abteilung / Rolle</label>
+                    <select id="userRoleInput" onchange="toggleCustomRoleField(this.value)" class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 focus:border-cyan-400 rounded-xl text-xs text-white outline-none">
+                        <option value="Abrechnung">Abrechnung</option>
+                        <option value="Buchhaltung">Buchhaltung</option>
+                        <option value="Personalabteilung">Personalabteilung</option>
+                        <option value="Disposition">Disposition</option>
+                        <option value="Projektmanagement" selected>Projektmanagement</option>
+                        <option value="Individuell">Individuell</option>
+                    </select>
+                </div>
+
+                <!-- Custom Role Text Field (Visible only when 'Individuell' is selected) -->
+                <div id="customRoleContainer" class="hidden">
+                    <label for="customRoleInput" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5">Eigene Funktionsbezeichnung</label>
+                    <input type="text" id="customRoleInput" placeholder="z. B. Fuhrparkleiter / QM" 
+                           class="w-full px-3.5 py-2 bg-slate-900 border border-cyan-500/40 rounded-xl text-xs text-cyan-300 outline-none">
+                </div>
+
+                <div class="flex flex-col gap-2 pt-2 border-t border-slate-800">
+                    <button type="submit" class="w-full py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs font-mono shadow-md transition-colors flex items-center justify-center gap-1.5">
+                        <i data-lucide="key" class="w-4 h-4"></i>
+                        <span id="loginSubmitBtnText">Anmelden / Account sichern</span>
+                    </button>
+                    
+                    <button type="button" id="logoutBtn" onclick="benutzerAbmelden()" class="w-full py-2 bg-slate-900 hover:bg-slate-800 border border-rose-500/30 text-rose-300 hover:text-rose-200 rounded-xl text-xs font-mono transition-colors hidden flex items-center justify-center gap-1.5">
+                        <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                        <span>Abmelden & Sitzung sperren</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Team Management Modal (Create, Join by Code, Switch) -->
+    <div id="teamModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center z-50 hidden p-4">
+        <div class="glass-modal rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto transform transition-all shadow-2xl border border-emerald-500/40 space-y-5">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="p-2 bg-emerald-950 rounded-xl text-emerald-400 border border-emerald-500/30">
                         <i data-lucide="users" class="w-5 h-5"></i>
                     </div>
-                    <h2 class="text-base font-bold text-white font-mono uppercase tracking-wider">Team Verwaltung</h2>
+                    <div>
+                        <h2 class="text-base font-bold text-white font-mono uppercase tracking-wider">Team-Verwaltung</h2>
+                        <p class="text-[11px] text-slate-400">Gemeinsam an Projekten arbeiten</p>
+                    </div>
                 </div>
                 <button onclick="schließeTeamModal()" class="p-1.5 hover:bg-slate-800 rounded-xl text-slate-400 hover:text-white transition-all">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
 
-            <div class="space-y-2">
-                <label class="block text-xs font-mono uppercase text-slate-300 font-bold">Verfügbare Teams</label>
-                <div id="teamMitgliedschaftenListe" class="space-y-2 max-h-48 overflow-y-auto"></div>
-            </div>
-
-            <!-- Join Team -->
-            <div class="space-y-2 border-t border-slate-800 pt-4">
-                <label class="block text-xs font-mono uppercase text-slate-300 font-bold">Bestehendem Team beitreten</label>
+            <!-- Join Team with Code -->
+            <div class="p-3.5 bg-slate-900/90 border border-slate-800 rounded-xl space-y-2">
+                <label class="block text-xs font-mono uppercase text-slate-300 font-bold flex items-center gap-1.5">
+                    <i data-lucide="key" class="w-3.5 h-3.5 text-cyan-400"></i> Bestehendem Team beitreten
+                </label>
                 <div class="flex gap-2">
-                    <input type="text" id="joinTeamCodeInput" placeholder="Team-Code eingeben" class="flex-1 px-3.5 py-2 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white font-mono uppercase outline-none focus:border-cyan-400">
+                    <input type="text" id="joinTeamCodeInput" placeholder="Team-Code (z. B. HG-4821)" class="flex-1 px-3.5 py-2 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white font-mono uppercase outline-none focus:border-cyan-400">
                     <button onclick="treteTeamBei()" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold rounded-xl text-xs font-mono transition-colors">
                         Beitreten
                     </button>
@@ -377,43 +444,124 @@
             </div>
 
             <!-- Create New Team -->
-            <div class="space-y-2 border-t border-slate-800 pt-4">
-                <label class="block text-xs font-mono uppercase text-slate-300 font-bold">Neues Team erstellen</label>
+            <div class="p-3.5 bg-slate-900/90 border border-slate-800 rounded-xl space-y-2">
+                <label class="block text-xs font-mono uppercase text-slate-300 font-bold flex items-center gap-1.5">
+                    <i data-lucide="plus" class="w-3.5 h-3.5 text-emerald-400"></i> Neues Team gründen
+                </label>
                 <div class="flex gap-2">
-                    <input type="text" id="createTeamNameInput" placeholder="z. B. Marketing / Sales" class="flex-1 px-3.5 py-2 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white outline-none focus:border-cyan-400">
-                    <button onclick="erstelleTeam()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-xs font-mono transition-colors">
+                    <input type="text" id="createTeamNameInput" placeholder="Teamname (z. B. Digitalisierung)" class="flex-1 px-3.5 py-2 bg-slate-950 border border-slate-700 rounded-xl text-xs text-white outline-none focus:border-emerald-400">
+                    <button onclick="erstelleTeam()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold rounded-xl text-xs font-mono transition-colors">
                         Erstellen
                     </button>
                 </div>
             </div>
 
+            <!-- Available Teams List -->
+            <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                    <label class="block text-xs font-mono uppercase text-slate-300 font-bold">Verfügbare Teams</label>
+                    <span class="text-[10px] font-mono text-slate-400" id="teamCountBadge">0 Teams</span>
+                </div>
+                <div id="teamListeModal" class="space-y-2 max-h-48 overflow-y-auto"></div>
+            </div>
+
             <div class="flex justify-end pt-2 border-t border-slate-800">
-                <button onclick="schließeTeamModal()" class="px-4 py-2 rounded-xl border border-slate-700 text-slate-300 hover:bg-slate-800 text-xs font-semibold transition-all">Schließen</button>
+                <button onclick="schließeTeamModal()" class="px-4 py-2 rounded-xl border border-slate-700 text-slate-300 hover:bg-slate-800 text-xs font-semibold">Schließen</button>
             </div>
         </div>
     </div>
 
-    <!-- Detail Modal -->
-    <div id="detailModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center z-50 hidden p-4">
-        <div class="glass-modal rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto transform transition-all duration-300 shadow-2xl border border-cyan-500/30">
+    <!-- Project Form Modal (Create / Edit) -->
+    <div id="formularModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center z-50 hidden p-4">
+        <section class="glass-modal rounded-2xl p-6 w-full max-w-xl max-h-[90vh] overflow-y-auto transform transition-all shadow-2xl border border-slate-700/80">
+            <div class="flex items-center justify-between mb-5 border-b border-slate-800 pb-4">
+                <h2 class="text-base font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2" id="formularTitel">
+                    <i data-lucide="plus-circle" class="w-4 h-4 text-emerald-400"></i>
+                    <span>Neue Aufgabe anlegen</span>
+                </h2>
+                <button onclick="schließeFormularModal()" class="p-2 hover:bg-slate-800 rounded-xl text-slate-400 hover:text-white transition-all">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <form id="projektForm" onsubmit="speichereProjekt(event)" class="space-y-4">
+                <input type="hidden" id="editId">
+                
+                <div>
+                    <label for="titel" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5">Aufgabentitel *</label>
+                    <input type="text" id="titel" placeholder="z. B. Teamboard Datenstruktur prüfen" required 
+                           class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 focus:border-emerald-400 rounded-xl text-xs text-white outline-none">
+                </div>
+
+                <div>
+                    <label for="beschreibung" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5">Beschreibung & Notizen</label>
+                    <textarea id="beschreibung" placeholder="Ziele, Anforderungen, Links..." rows="3" 
+                              class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 focus:border-emerald-400 rounded-xl text-xs text-white outline-none resize-none"></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="mitarbeiter" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5">Verantwortlich</label>
+                        <input type="text" id="mitarbeiter" placeholder="z. B. Dominik" 
+                               class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 focus:border-emerald-400 rounded-xl text-xs text-white outline-none">
+                    </div>
+                    <div>
+                        <label for="deadline" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5">Fälligkeitsdatum</label>
+                        <input type="date" id="deadline" 
+                               class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 focus:border-emerald-400 rounded-xl text-xs text-white outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="kategorie" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5">Kategorie</label>
+                        <select id="kategorie" class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 focus:border-emerald-400 rounded-xl text-xs text-white outline-none">
+                            <option value="Digital">Digital / IT</option>
+                            <option value="Personal / HR">Personal / HR</option>
+                            <option value="Organisation">Organisation</option>
+                            <option value="Infrastruktur">Infrastruktur</option>
+                            <option value="Vertrieb">Vertrieb</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="prio" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5">Priorität</label>
+                        <select id="prio" class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 focus:border-emerald-400 rounded-xl text-xs text-white outline-none">
+                            <option value="prio-niedrig">Niedrig (Grün)</option>
+                            <option value="prio-mittel" selected>Mittel (Gelb)</option>
+                            <option value="prio-hoch">Hoch (Rot)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-4 border-t border-slate-800">
+                    <button type="button" onclick="schließeFormularModal()" class="px-4 py-2.5 rounded-xl border border-slate-700 text-slate-300 hover:bg-slate-800 text-xs font-semibold">Abbrechen</button>
+                    <button type="submit" class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-xl text-xs font-mono shadow-md">Aufgabe speichern</button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <!-- Detail View Modal -->
+    <div id="detailModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center z-50 hidden p-4">
+        <div class="glass-modal rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto transform transition-all shadow-2xl border border-cyan-500/30">
             <div class="flex items-start justify-between border-b border-slate-800 pb-4 mb-4">
                 <div>
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-cyan-950 text-cyan-300 border border-cyan-500/30" id="detailKategorie">Digital</span>
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-cyan-950 text-cyan-300 border border-cyan-500/30" id="detailKategorie">Kategorie</span>
                         <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider" id="detailPrioBadge">Prio</span>
                     </div>
-                    <h2 class="text-xl font-extrabold text-white leading-tight font-mono" id="detailTitel">Projekt Titel</h2>
+                    <h2 class="text-xl font-extrabold text-white leading-tight font-mono" id="detailTitel">Titel</h2>
                 </div>
-                <button onclick="schließeDetailModal()" class="p-2 hover:bg-slate-800/80 rounded-xl text-slate-400 hover:text-white transition-all">
+                <button onclick="schließeDetailModal()" class="p-2 hover:bg-slate-800 rounded-xl text-slate-400 hover:text-white transition-all">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
 
             <div class="space-y-5">
                 <div>
-                    <h4 class="text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5 font-bold">Spezifikation & Zielstellung</h4>
+                    <h4 class="text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5 font-bold">Beschreibung</h4>
                     <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 text-xs text-slate-300 leading-relaxed font-sans whitespace-pre-line" id="detailBeschreibung">
-                        Keine Beschreibung.
+                        Keine Beschreibung vorhanden.
                     </div>
                 </div>
 
@@ -428,23 +576,30 @@
                     </div>
                 </div>
 
-                <!-- Checkliste -->
+                <!-- Unterpunkte / Checkliste -->
                 <div>
                     <div class="flex items-center justify-between mb-2">
-                        <h4 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Projekt-Checkliste</h4>
+                        <h4 class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">Teilschritte / Checkliste</h4>
                         <span class="text-[11px] font-mono text-cyan-400" id="detailChecklisteStats">0/0</span>
                     </div>
-                    <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 space-y-2 max-h-48 overflow-y-auto" id="detailUnterpunkteList"></div>
+                    <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 space-y-2 max-h-48 overflow-y-auto mb-2" id="detailUnterpunkteList"></div>
+                    
+                    <div class="flex gap-2">
+                        <input type="text" id="newSubitemInput" placeholder="Neuer Teilschritt..." class="flex-1 px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white outline-none focus:border-cyan-400">
+                        <button onclick="addSubitem()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold rounded-xl text-xs font-mono transition-colors border border-slate-700">
+                            + Hinzufügen
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Kommentare -->
                 <div class="border-t border-slate-800 pt-4">
-                    <h4 class="text-xs font-mono uppercase tracking-wider text-slate-300 font-bold mb-3 flex items-center gap-2">
-                        <i data-lucide="message-square" class="w-4 h-4 text-cyan-400"></i> Kommentare & Notizen
+                    <h4 class="text-xs font-mono uppercase tracking-wider text-slate-300 font-bold mb-2.5 flex items-center gap-2">
+                        <i data-lucide="message-square" class="w-4 h-4 text-cyan-400"></i> Team-Notizen & Kommentare
                     </h4>
-                    <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 space-y-2 max-h-44 overflow-y-auto mb-3" id="detailCommentsList"></div>
+                    <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 space-y-2 max-h-40 overflow-y-auto mb-2.5" id="detailCommentsList"></div>
                     <div class="flex gap-2">
-                        <input type="text" id="newCommentInput" placeholder="Kommentar schreiben..." class="flex-1 px-3.5 py-2 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white outline-none focus:border-cyan-400">
+                        <input type="text" id="newCommentInput" placeholder="Nachricht oder Statusnotiz schreiben..." class="flex-1 px-3.5 py-2 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white outline-none focus:border-cyan-400">
                         <button onclick="addComment()" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold rounded-xl text-xs font-mono transition-colors">Senden</button>
                     </div>
                 </div>
@@ -455,7 +610,7 @@
                     <button onclick="bearbeiteProjektVomDetail()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 text-xs font-bold transition-all flex items-center gap-1.5">
                         <i data-lucide="edit-3" class="w-4 h-4"></i> Bearbeiten
                     </button>
-                    <button onclick="loescheProjektVomDetail()" class="px-3 py-2 rounded-xl bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-500/40 text-xs font-bold transition-all flex items-center gap-1.5">
+                    <button onclick="loescheProjektVomDetail()" class="px-3.5 py-2 rounded-xl bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-500/40 text-xs font-bold transition-all flex items-center gap-1.5">
                         <i data-lucide="trash-2" class="w-4 h-4"></i> Löschen
                     </button>
                 </div>
@@ -464,322 +619,680 @@
         </div>
     </div>
 
-    <!-- Form Modal (Create / Edit) -->
-    <div id="formularModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center z-50 hidden p-4">
-        <section class="glass-modal rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto transform transition-all duration-300 shadow-2xl border border-slate-700/80">
-            <div class="flex items-center justify-between mb-5 border-b border-slate-800 pb-4">
-                <h2 class="text-base font-bold text-white uppercase tracking-wider font-mono" id="formularTitel">Neues Projekt erfassen</h2>
-                <button onclick="schließeFormularModal()" class="p-2 hover:bg-slate-800 rounded-xl text-slate-400 hover:text-white transition-all">
+    <!-- Diagnose & Hilfe Modal -->
+    <div id="diagnoseModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center z-50 hidden p-4">
+        <div class="glass-modal rounded-2xl p-6 w-full max-w-xl max-h-[90vh] overflow-y-auto transform transition-all shadow-2xl border border-cyan-500/30 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <i data-lucide="help-circle" class="w-5 h-5 text-cyan-400"></i>
+                    <h2 class="text-base font-bold text-white font-mono uppercase tracking-wider">Google Sheets Verbindungs-Hilfe</h2>
+                </div>
+                <button onclick="schließeDiagnoseModal()" class="p-1.5 hover:bg-slate-800 rounded-xl text-slate-400 hover:text-white transition-all">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
-            
-            <form id="projektForm" onsubmit="speichereProjekt(event)" class="space-y-4">
-                <input type="hidden" id="editId">
-                
-                <div>
-                    <label for="titel" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5">Projektname</label>
-                    <input type="text" id="titel" placeholder="z. B. Prozessoptimierung Digitalisierung" required class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 focus:border-cyan-400 rounded-xl text-xs text-white outline-none">
+
+            <div class="space-y-3 text-xs leading-relaxed text-slate-300">
+                <div class="p-3 bg-amber-950/40 border border-amber-500/40 rounded-xl space-y-1">
+                    <div class="font-bold text-amber-300 flex items-center gap-1.5">
+                        <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+                        Häufigste Ursache: Freigabe-Einstellung
+                    </div>
+                    <p class="text-[11px] text-slate-300">
+                        Wenn die Meldung <em>„Google Tabelle aktuell nicht erreichbar“</em> erscheint, blockiert Google Apps Script die Web-Anfrage, weil die Bereitstellung noch nicht für <strong>„Jeder“ (anonym)</strong> freigegeben ist.
+                    </p>
                 </div>
 
-                <div>
-                    <label for="beschreibung" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5">Beschreibung</label>
-                    <textarea id="beschreibung" placeholder="Ziele & Details..." rows="3" class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 focus:border-cyan-400 rounded-xl text-xs text-white outline-none resize-none"></textarea>
+                <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 space-y-2">
+                    <h4 class="font-bold text-white uppercase text-[11px] font-mono">So löst du das in 3 Schritten:</h4>
+                    <ol class="list-decimal list-inside space-y-2 text-[11px] text-slate-300">
+                        <li>Öffne dein Google Apps Script über deine Tabelle (<strong>Erweiterungen &rarr; Apps Script</strong>).</li>
+                        <li>Klicke oben rechts auf den blauen Button <strong>„Bereitstellen“ &rarr; „Bereitstellungen verwalten“</strong> (oder <em>„Neue Bereitstellung“</em>).</li>
+                        <li>Stelle sicher, dass:
+                            <ul class="list-disc list-inside pl-4 mt-1 text-cyan-300 font-mono text-[10px]">
+                                <li>Ausführen als: <strong>Ich (deine E-Mail)</strong></li>
+                                <li>Wer hat Zugriff: <strong>Jeder</strong> (nicht „Nur ich“!)</li>
+                            </ul>
+                        </li>
+                    </ol>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label for="mitarbeiter" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5">Verantwortlich</label>
-                        <input type="text" id="mitarbeiter" placeholder="z. B. Dominik Fabianski" required class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 focus:border-cyan-400 rounded-xl text-xs text-white outline-none">
+                <div class="space-y-1.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-mono font-bold text-slate-300">Benötigter Apps-Script Code:</span>
+                        <button onclick="kopiereScriptCode()" class="text-[10px] font-mono text-cyan-400 hover:text-cyan-300 bg-cyan-950 border border-cyan-500/30 px-2 py-0.5 rounded">Code kopieren</button>
                     </div>
-                    <div>
-                        <label for="deadline" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5">Fälligkeitsdatum</label>
-                        <input type="date" id="deadline" class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 focus:border-cyan-400 rounded-xl text-xs text-white outline-none">
-                    </div>
+                    <textarea id="appsScriptTemplate" readonly rows="5" class="w-full p-2.5 bg-slate-900 font-mono text-[10px] text-slate-400 border border-slate-800 rounded-xl outline-none select-all resize-none"></textarea>
                 </div>
+            </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label for="kategorie" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5">Kategorie</label>
-                        <select id="kategorie" class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 focus:border-cyan-400 rounded-xl text-xs text-white outline-none">
-                            <option value="Digital">Digital</option>
-                            <option value="Personal / HR">Personal / HR</option>
-                            <option value="Organisation">Organisation</option>
-                            <option value="Infrastruktur">Infrastruktur</option>
-                            <option value="Vertrieb">Vertrieb</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="prio" class="block text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 mb-1.5">Priorität</label>
-                        <select id="prio" class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 focus:border-cyan-400 rounded-xl text-xs text-white outline-none">
-                            <option value="prio-niedrig">Niedrig (Grün)</option>
-                            <option value="prio-mittel" selected>Mittel (Gelb)</option>
-                            <option value="prio-hoch">Hoch (Rot)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="flex justify-end gap-3 pt-4 border-t border-slate-800">
-                    <button type="button" onclick="schließeFormularModal()" class="px-4 py-2.5 rounded-xl border border-slate-700 text-slate-300 hover:bg-slate-800 text-xs font-semibold">Abbrechen</button>
-                    <button type="submit" class="px-5 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl text-xs font-mono shadow-md">Speichern</button>
-                </div>
-            </form>
-        </section>
+            <div class="flex items-center justify-between pt-3 border-t border-slate-800">
+                <button onclick="testeVerbindungLive()" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold rounded-xl text-xs font-mono transition-colors">
+                    Verbindung jetzt erneut testen
+                </button>
+                <button onclick="schließeDiagnoseModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold">Schließen</button>
+            </div>
+        </div>
     </div>
 
+    <!-- Application Logic -->
     <script>
-        // Global Application State
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'hergarten-teamboard-app';
-        let db, auth;
+        // Feste Google Sheets Web-App URL
+        const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyOmlEll-pfMBvNDWnQ3r_AUy1QdlGBTdclPZu_6m2DHyAtU5N-CsjG8LHNbwpCK3pYKw/exec';
+
+        // State variables
         let currentUser = null;
-        let currentTeamId = null;
+        let registeredUsers = []; // Stores registered accounts with role & hashed passwords
+        let allProjects = [];
         let teams = [];
-        let allProjects = []; // Memory cache
-        let activeSnapshotUnsubscribe = null;
+        let currentTeamId = null;
+        let draggedProjectId = null;
         let currentDetailProject = null;
-        let isLocalMode = false;
+        let autoSyncTimer = null;
 
-        // Default local sample data when running without Firebase permissions
-        const DEFAULT_LOCAL_TEAMS = [
-            { id: 'team-main', name: "Hergarten Hauptteam", code: "HERGARTEN-MAIN" }
-        ];
-
-        const DEFAULT_LOCAL_PROJECTS = [
-            {
-                id: 'proj-1',
-                titel: 'Prozessoptimierung Digitalisierung',
-                beschreibung: 'Analyse und Umstellung papierbasierter Workflows auf digitale Teamboards.',
-                mitarbeiter: 'Dominik Fabianski',
-                deadline: '2026-09-15',
-                kategorie: 'Digital',
-                prio: 'prio-hoch',
-                status: 'arbeit',
-                teamId: 'team-main',
-                unterpunkte: [
-                    { titel: 'Ist-Analyse erstellen', done: true },
-                    { titel: 'Teamboard v4 testen', done: true },
-                    { titel: 'Team-Schulung organisieren', done: false }
-                ],
-                comments: [
-                    { author: 'Team', time: '10:30', text: 'Erste Testphase erfolgreich verlaufen.' }
-                ]
-            },
-            {
-                id: 'proj-2',
-                titel: 'Erneuerung IT-Infrastruktur',
-                beschreibung: 'Upgrade der lokalen Serverlandschaft und Cloud-Anbindung.',
-                mitarbeiter: 'IT Support',
-                deadline: '2026-10-01',
-                kategorie: 'Infrastruktur',
-                prio: 'prio-mittel',
-                status: 'neu',
-                teamId: 'team-main',
-                unterpunkte: [],
-                comments: []
-            },
-            {
-                id: 'proj-3',
-                titel: 'Mitarbeiter-Onboarding Portal',
-                beschreibung: 'Interne Wissensdatenbank für neue Teammitglieder.',
-                mitarbeiter: 'HR Team',
-                deadline: '2026-08-30',
-                kategorie: 'Personal / HR',
-                prio: 'prio-niedrig',
-                status: 'test',
-                teamId: 'team-main',
-                unterpunkte: [
-                    { titel: 'Dokumente hochladen', done: true }
-                ],
-                comments: []
-            }
-        ];
-
-        function loadLocalData() {
+        // Initialize App State
+        function initApp() {
+            // Lade registrierte Accounts und gespeichertes Login
             try {
-                const storedTeams = localStorage.getItem('hergarten_teams');
-                teams = storedTeams ? JSON.parse(storedTeams) : DEFAULT_LOCAL_TEAMS;
+                const storedUsers = localStorage.getItem('hergarten_registered_users');
+                if (storedUsers) registeredUsers = JSON.parse(storedUsers);
 
-                const storedProjects = localStorage.getItem('hergarten_projects');
-                allProjects = storedProjects ? JSON.parse(storedProjects) : DEFAULT_LOCAL_PROJECTS;
-
-                if (!teams || teams.length === 0) {
-                    teams = DEFAULT_LOCAL_TEAMS;
+                const storedUser = localStorage.getItem('hergarten_current_user');
+                if (storedUser) {
+                    currentUser = JSON.parse(storedUser);
                 }
             } catch (e) {
-                console.warn("LocalStorage access error, using defaults:", e);
-                teams = DEFAULT_LOCAL_TEAMS;
-                allProjects = DEFAULT_LOCAL_PROJECTS;
+                console.warn('Storage reading issue:', e);
+            }
+
+            renderUserUI();
+
+            // Falls kein Benutzer angemeldet ist, Modal zwingend öffnen
+            if (!currentUser) {
+                setTimeout(() => {
+                    oeffneUserModal(true);
+                }, 300);
+            }
+
+            // Vorbefüllen des Diagnose-Codefelds (inkl. Users-Tab für Google Sheets)
+            const scriptField = document.getElementById('appsScriptTemplate');
+            if (scriptField) {
+                scriptField.value = `function doGet(e) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  
+  // Sheet Projects
+  var pSheet = ss.getSheetByName("Projects") || ss.insertSheet("Projects");
+  var pData = pSheet.getDataRange().getValues();
+  var projects = [];
+  if (pData.length > 1) {
+    for (var i = 1; i < pData.length; i++) {
+      if (!pData[i][0]) continue;
+      projects.push({
+        id: String(pData[i][0]),
+        titel: pData[i][1] || '',
+        beschreibung: pData[i][2] || '',
+        mitarbeiter: pData[i][3] || '',
+        deadline: pData[i][4] ? String(pData[i][4]) : '',
+        kategorie: pData[i][5] || 'Digital',
+        prio: pData[i][6] || 'prio-mittel',
+        status: pData[i][7] || 'neu',
+        teamId: pData[i][8] || 'team-main',
+        unterpunkte: pData[i][9] ? JSON.parse(pData[i][9]) : [],
+        comments: pData[i][10] ? JSON.parse(pData[i][10]) : []
+      });
+    }
+  }
+
+  // Sheet Teams
+  var tSheet = ss.getSheetByName("Teams") || ss.insertSheet("Teams");
+  var tData = tSheet.getDataRange().getValues();
+  var teams = [];
+  if (tData.length > 1) {
+    for (var j = 1; j < tData.length; j++) {
+      if (!tData[j][0]) continue;
+      teams.push({
+        id: String(tData[j][0]),
+        name: tData[j][1] || '',
+        code: tData[j][2] || ''
+      });
+    }
+  }
+
+  // Sheet Users (Passwörter & Abteilungen)
+  var uSheet = ss.getSheetByName("Users") || ss.insertSheet("Users");
+  var uData = uSheet.getDataRange().getValues();
+  var users = [];
+  if (uData.length > 1) {
+    for (var u = 1; u < uData.length; u++) {
+      if (!uData[u][0]) continue;
+      users.push({
+        name: String(uData[u][0]),
+        role: String(uData[u][1] || 'Projektmanagement'),
+        password: String(uData[u][2] || '')
+      });
+    }
+  }
+
+  return ContentService.createTextOutput(JSON.stringify({ status: "success", projects: projects, teams: teams, users: users }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  var payload = JSON.parse(e.postData.contents);
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  if (payload.projects) {
+    var pSheet = ss.getSheetByName("Projects") || ss.insertSheet("Projects");
+    pSheet.clearContents();
+    pSheet.appendRow(["ID", "Titel", "Beschreibung", "Mitarbeiter", "Deadline", "Kategorie", "Prioritaet", "Status", "TeamID", "UnterpunkteJSON", "KommentareJSON"]);
+    var pList = payload.projects;
+    for (var i = 0; i < pList.length; i++) {
+      var p = pList[i];
+      pSheet.appendRow([p.id, p.titel, p.beschreibung, p.mitarbeiter, p.deadline, p.kategorie, p.prio, p.status, p.teamId || 'team-main', JSON.stringify(p.unterpunkte || []), JSON.stringify(p.comments || [])]);
+    }
+  }
+
+  if (payload.teams) {
+    var tSheet = ss.getSheetByName("Teams") || ss.insertSheet("Teams");
+    tSheet.clearContents();
+    tSheet.appendRow(["ID", "Name", "Code"]);
+    var tList = payload.teams;
+    for (var j = 0; j < tList.length; j++) {
+      var t = tList[j];
+      tSheet.appendRow([t.id, t.name, t.code]);
+    }
+  }
+
+  if (payload.users) {
+    var uSheet = ss.getSheetByName("Users") || ss.insertSheet("Users");
+    uSheet.clearContents();
+    uSheet.appendRow(["Name", "Rolle", "Passwort"]);
+    var uList = payload.users;
+    for (var k = 0; k < uList.length; k++) {
+      var usr = uList[k];
+      uSheet.appendRow([usr.name, usr.role, usr.password]);
+    }
+  }
+
+  return ContentService.createTextOutput(JSON.stringify({ status: "ok" }))
+    .setMimeType(ContentService.MimeType.JSON);
+}`;
+            }
+
+            // Initiale Synchronisation mit Google Sheets
+            ladeDatenVonGoogleSheets();
+
+            // Automatischer Hintergrund-Sync alle 30 Sekunden
+            if (autoSyncTimer) clearInterval(autoSyncTimer);
+            autoSyncTimer = setInterval(() => {
+                ladeDatenVonGoogleSheets(true);
+            }, 30000);
+        }
+
+        // Benutzer- & Passwortverwaltung
+        function renderUserUI() {
+            const nameEl = document.getElementById('userNameDisplay');
+            const roleEl = document.getElementById('userRoleDisplay');
+            const avatarEl = document.getElementById('userAvatarInitial');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const closeBtn = document.getElementById('closeUserModalBtn');
+
+            if (currentUser && currentUser.name) {
+                if (nameEl) nameEl.innerText = currentUser.name;
+                if (roleEl) roleEl.innerText = currentUser.role || 'Projektmanagement';
+                if (avatarEl) avatarEl.innerText = currentUser.name.charAt(0).toUpperCase();
+                if (logoutBtn) logoutBtn.classList.remove('hidden');
+                if (closeBtn) closeBtn.classList.remove('hidden');
+            } else {
+                if (nameEl) nameEl.innerText = 'Nicht angemeldet';
+                if (roleEl) roleEl.innerText = 'Klick zum Einloggen';
+                if (avatarEl) avatarEl.innerText = '?';
+                if (logoutBtn) logoutBtn.classList.add('hidden');
+                if (closeBtn) closeBtn.classList.add('hidden');
             }
         }
 
-        function saveLocalData() {
-            try {
-                localStorage.setItem('hergarten_teams', JSON.stringify(teams));
-                localStorage.setItem('hergarten_projects', JSON.stringify(allProjects));
-            } catch (e) {
-                console.error("Error saving to localStorage:", e);
+        function oeffneUserModal(forced = false) {
+            const input = document.getElementById('userNameInput');
+            const passInput = document.getElementById('userPasswordInput');
+            const roleSelect = document.getElementById('userRoleInput');
+            const customRoleInput = document.getElementById('customRoleInput');
+            const closeBtn = document.getElementById('closeUserModalBtn');
+
+            if (passInput) passInput.value = '';
+
+            if (currentUser) {
+                if (input) input.value = currentUser.name || '';
+                
+                // Rollenwert setzen
+                const standardRoles = ['Abrechnung', 'Buchhaltung', 'Personalabteilung', 'Disposition', 'Projektmanagement'];
+                if (standardRoles.includes(currentUser.role)) {
+                    if (roleSelect) roleSelect.value = currentUser.role;
+                    toggleCustomRoleField(currentUser.role);
+                } else if (currentUser.role) {
+                    if (roleSelect) roleSelect.value = 'Individuell';
+                    if (customRoleInput) customRoleInput.value = currentUser.role;
+                    toggleCustomRoleField('Individuell');
+                }
+                if (closeBtn && !forced) closeBtn.classList.remove('hidden');
+            } else {
+                if (closeBtn) closeBtn.classList.add('hidden');
+            }
+
+            document.getElementById('userModal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function schließeUserModal() {
+            if (!currentUser) {
+                showToast("Bitte melde dich zuerst mit deinem Passwort an", "error");
+                return;
+            }
+            document.getElementById('userModal').classList.add('hidden');
+        }
+
+        function toggleCustomRoleField(value) {
+            const container = document.getElementById('customRoleContainer');
+            if (container) {
+                if (value === 'Individuell') {
+                    container.classList.remove('hidden');
+                } else {
+                    container.classList.add('hidden');
+                }
             }
         }
 
-        function enableLocalMode() {
-            isLocalMode = true;
-            if (activeSnapshotUnsubscribe) {
-                try { activeSnapshotUnsubscribe(); } catch (e) {}
-                activeSnapshotUnsubscribe = null;
-            }
-
-            loadLocalData();
-
-            if (!currentTeamId || !teams.some(t => t.id === currentTeamId)) {
-                currentTeamId = teams[0].id;
-            }
-
-            // Update status badge in UI
-            const badge = document.getElementById('datenquelleBadge');
-            if (badge) {
-                badge.className = "inline-flex items-center gap-1.5 text-[10px] px-2 py-0.5 rounded-full font-mono transition-all bg-amber-950/80 text-amber-400 border border-amber-500/30";
-                badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Lokaler Modus`;
-            }
-
-            // Hide loader & display board UI
-            const loader = document.getElementById('initialLoader');
-            if (loader) loader.classList.add('hidden');
-            const main = document.getElementById('mainContent');
-            if (main) main.classList.remove('hidden');
-
-            renderTeamSelector();
-            renderBoard();
+        function togglePasswordVisibility(inputId) {
+            const el = document.getElementById(inputId);
+            if (!el) return;
+            el.type = el.type === 'password' ? 'text' : 'password';
         }
 
-        function initFirebase() {
-            try {
-                const firebaseConfig = typeof __firebase_config !== 'undefined' 
-                    ? JSON.parse(__firebase_config)
-                    : null;
+        function verarbeiteBenutzerLogin(e) {
+            e.preventDefault();
+            const name = document.getElementById('userNameInput').value.trim();
+            const password = document.getElementById('userPasswordInput').value.trim();
+            let role = document.getElementById('userRoleInput').value;
 
-                if (!firebaseConfig || !firebaseConfig.apiKey || firebaseConfig.apiKey === 'demo-key') {
-                    console.log("No valid Firebase credentials available. Starting in Local Storage Mode.");
-                    enableLocalMode();
+            if (role === 'Individuell') {
+                const customVal = document.getElementById('customRoleInput').value.trim();
+                role = customVal ? customVal : 'Individuell';
+            }
+
+            if (!name || !password) {
+                showToast("Bitte Name und Passwort eingeben", "error");
+                return;
+            }
+
+            // Prüfen ob Benutzer bereits registriert ist
+            const existingUser = registeredUsers.find(u => u.name.toLowerCase() === name.toLowerCase());
+
+            if (existingUser) {
+                // Bestehender Benutzer: Passwort abgleichen
+                if (existingUser.password !== password) {
+                    showToast("Falsches Passwort für dieses Profil!", "error");
                     return;
                 }
-
-                if (!firebase.apps.length) {
-                    firebase.initializeApp(firebaseConfig);
-                }
-                db = firebase.firestore();
-                auth = firebase.auth();
-
-                auth.onAuthStateChanged(async (user) => {
-                    if (user) {
-                        currentUser = user;
-                        await setupTeamsAndProjects();
-                    } else {
-                        try {
-                            const cred = await auth.signInAnonymously();
-                            currentUser = cred.user;
-                            await setupTeamsAndProjects();
-                        } catch (e) {
-                            console.warn("Anonymous auth failed, falling back to local mode:", e);
-                            enableLocalMode();
-                        }
-                    }
-                });
-            } catch (err) {
-                console.warn("Firebase init error, switching to local mode:", err);
-                enableLocalMode();
+                // Rolle aktualisieren falls geändert
+                existingUser.role = role;
+                currentUser = { name: existingUser.name, role: existingUser.role };
+            } else {
+                // Neuer Benutzer wird angelegt und mit Passwort geschützt
+                const newUser = { name, role, password };
+                registeredUsers.push(newUser);
+                currentUser = { name, role };
+                showToast(`Neuer Account für "${name}" erstellt & geschützt!`, "success");
             }
-        }
 
-        async function setupTeamsAndProjects() {
-            if (isLocalMode) return;
-            if (!currentUser) return;
-
-            const teamsRef = db.collection('artifacts').doc(appId).collection('teams');
-            
+            // Speichern in LocalStorage und Google Sheets Synchronisation anstoßen
             try {
-                const snapshot = await teamsRef.get();
-                teams = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                localStorage.setItem('hergarten_current_user', JSON.stringify(currentUser));
+                localStorage.setItem('hergarten_registered_users', JSON.stringify(registeredUsers));
+            } catch(err) {}
 
-                if (teams.length === 0) {
-                    const defaultTeam = {
-                        name: "Hergarten Hauptteam",
-                        code: "HERGARTEN-MAIN",
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    };
-                    const newDoc = await teamsRef.add(defaultTeam);
-                    teams.push({ id: newDoc.id, ...defaultTeam });
+            renderUserUI();
+            document.getElementById('userModal').classList.add('hidden');
+            showToast(`Angemeldet als ${currentUser.name} (${currentUser.role})`, "success");
+
+            // Im Formular vorbefüllen
+            const mitarbeiterField = document.getElementById('mitarbeiter');
+            if (mitarbeiterField) {
+                mitarbeiterField.value = currentUser.name;
+            }
+
+            speichereAllesAutomatischerSync();
+        }
+
+        function benutzerAbmelden() {
+            currentUser = null;
+            try {
+                localStorage.removeItem('hergarten_current_user');
+            } catch (e) {}
+
+            renderUserUI();
+            showToast("Erfolgreich abgemeldet & Board gesperrt", "info");
+            oeffneUserModal(true);
+        }
+
+        // Connection Badge UI updater
+        function updateConnectionBadge(status = 'online') {
+            const badge = document.getElementById('datenquelleBadge');
+            if (!badge) return;
+
+            if (status === 'online') {
+                badge.className = "inline-flex items-center gap-1.5 text-[10px] px-2.5 py-0.5 rounded-full font-mono transition-all bg-emerald-950/80 text-emerald-400 border border-emerald-500/40 shadow-sm cursor-pointer hover:border-emerald-400";
+                badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Google Tabelle verbunden`;
+            } else if (status === 'syncing') {
+                badge.className = "inline-flex items-center gap-1.5 text-[10px] px-2.5 py-0.5 rounded-full font-mono transition-all bg-cyan-950/80 text-cyan-400 border border-cyan-500/40 shadow-sm cursor-pointer";
+                badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-spin"></span> Synchronisiere...`;
+            } else {
+                badge.className = "inline-flex items-center gap-1.5 text-[10px] px-2.5 py-0.5 rounded-full font-mono transition-all bg-amber-950/90 text-amber-300 border border-amber-500/50 shadow-sm cursor-pointer hover:bg-amber-900/60";
+                badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Verbindung prüfen (Klick für Hilfe)`;
+            }
+        }
+
+        // Load both teams and projects from Google Sheets
+        async function ladeDatenVonGoogleSheets(silent = false) {
+            const syncIcon = document.getElementById('syncIcon');
+            if (!silent && syncIcon) syncIcon.classList.add('animate-spin');
+            if (!silent) updateConnectionBadge('syncing');
+
+            try {
+                const response = await fetch(`${GOOGLE_SHEETS_URL}?action=getData`, {
+                    method: 'GET',
+                    redirect: 'follow'
+                });
+
+                if (!response.ok) throw new Error(`HTTP Status ${response.status}`);
+
+                const result = await response.json();
+
+                // Teams verarbeiten
+                if (result && Array.isArray(result.teams) && result.teams.length > 0) {
+                    teams = result.teams;
+                } else if (!teams || teams.length === 0) {
+                    // Standard-Team anlegen falls komplett neu
+                    teams = [
+                        { id: 'team-main', name: 'Hergarten Hauptteam', code: 'HG-MAIN' }
+                    ];
                 }
 
-                currentTeamId = teams[0].id;
+                // Projekte verarbeiten
+                if (result && Array.isArray(result.projects)) {
+                    allProjects = result.projects;
+                }
+
+                // Benutzerkonten verarbeiten
+                if (result && Array.isArray(result.users) && result.users.length > 0) {
+                    // Synchronisiere Benutzerliste
+                    registeredUsers = result.users;
+                    try {
+                        localStorage.setItem('hergarten_registered_users', JSON.stringify(registeredUsers));
+                    } catch (e) {}
+                }
+
+                // Aktives Team setzen
+                if (!currentTeamId || !teams.some(t => t.id === currentTeamId)) {
+                    currentTeamId = teams[0].id;
+                }
+
+                // Lokal sichern
+                saveLocally();
+
+                updateConnectionBadge('online');
                 renderTeamSelector();
-
-                const loader = document.getElementById('initialLoader');
-                if (loader) loader.classList.add('hidden');
-                const main = document.getElementById('mainContent');
-                if (main) main.classList.remove('hidden');
-
-                subscribeToProjects();
-
-            } catch (err) {
-                console.warn("Firestore teams permission error, switching to local mode:", err);
-                enableLocalMode();
-            }
-        }
-
-        function subscribeToProjects() {
-            if (isLocalMode) return;
-            if (activeSnapshotUnsubscribe) {
-                activeSnapshotUnsubscribe();
-            }
-
-            const projectsRef = db.collection('artifacts').doc(appId).collection('projects');
-
-            activeSnapshotUnsubscribe = projectsRef.onSnapshot((snapshot) => {
-                allProjects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
-                    .filter(p => p.teamId === currentTeamId);
-
                 renderBoard();
-            }, (error) => {
-                console.warn("Snapshot permission error, switching to local mode:", error);
-                enableLocalMode();
-            });
+
+                if (!silent) {
+                    showToast(`${allProjects.length} Aufgaben geladen`, "success");
+                }
+            } catch (error) {
+                console.warn('Verbindungsfehler zu Google Sheets:', error);
+                updateConnectionBadge('offline');
+                if (!silent) showToast("Google Tabelle nicht erreichbar (Offline-Cache aktiv)", "info");
+                
+                // Fallback to local cache
+                loadLocally();
+                renderTeamSelector();
+                renderBoard();
+            } finally {
+                if (syncIcon) syncIcon.classList.remove('animate-spin');
+            }
         }
 
+        // Save both teams, users and projects to Google Sheets & localStorage immediately
+        async function speichereAllesAutomatischerSync(silent = false) {
+            saveLocally();
+
+            const syncIcon = document.getElementById('syncIcon');
+            if (!silent && syncIcon) syncIcon.classList.add('animate-spin');
+            if (!silent) updateConnectionBadge('syncing');
+
+            try {
+                await fetch(GOOGLE_SHEETS_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({
+                        action: 'saveAll',
+                        teams: teams,
+                        projects: allProjects,
+                        users: registeredUsers
+                    })
+                });
+                updateConnectionBadge('online');
+            } catch (error) {
+                console.warn('Fehler beim Autospeichern in Google Sheets:', error);
+                updateConnectionBadge('offline');
+            } finally {
+                if (syncIcon) syncIcon.classList.remove('animate-spin');
+            }
+        }
+
+        function saveLocally() {
+            try {
+                localStorage.setItem('hergarten_teams_data', JSON.stringify(teams));
+                localStorage.setItem('hergarten_projects_data', JSON.stringify(allProjects));
+                localStorage.setItem('hergarten_active_team_id', currentTeamId);
+                localStorage.setItem('hergarten_registered_users', JSON.stringify(registeredUsers));
+            } catch (e) {
+                console.warn('LocalStorage error:', e);
+            }
+        }
+
+        function loadLocally() {
+            try {
+                const storedTeams = localStorage.getItem('hergarten_teams_data');
+                const storedProjects = localStorage.getItem('hergarten_projects_data');
+                const storedTeamId = localStorage.getItem('hergarten_active_team_id');
+                const storedUsers = localStorage.getItem('hergarten_registered_users');
+
+                if (storedTeams) teams = JSON.parse(storedTeams);
+                if (storedProjects) allProjects = JSON.parse(storedProjects);
+                if (storedUsers) registeredUsers = JSON.parse(storedUsers);
+
+                if (storedTeamId && teams.some(t => t.id === storedTeamId)) {
+                    currentTeamId = storedTeamId;
+                } else if (teams.length > 0) {
+                    currentTeamId = teams[0].id;
+                }
+            } catch (e) {
+                console.warn('LocalStorage load error:', e);
+            }
+
+            if (!teams || teams.length === 0) {
+                teams = [{ id: 'team-main', name: 'Hergarten Hauptteam', code: 'HG-MAIN' }];
+                currentTeamId = 'team-main';
+            }
+        }
+
+        function synchronisiereManuell() {
+            ladeDatenVonGoogleSheets();
+        }
+
+        // Teams Logik & Code-System
         function renderTeamSelector() {
             const select = document.getElementById('workspaceSelect');
-            if (select) {
-                select.innerHTML = teams.map(t => `<option value="${t.id}" ${t.id === currentTeamId ? 'selected' : ''}>👥 ${t.name} (${t.code})</option>`).join('');
-            }
-            
-            const teamListModal = document.getElementById('teamMitgliedschaftenListe');
-            if (teamListModal) {
-                teamListModal.innerHTML = teams.map(t => `
-                    <div class="flex items-center justify-between p-3 bg-slate-900 border border-slate-800 rounded-xl text-xs font-mono">
-                        <div>
-                            <div class="font-bold text-white">${t.name}</div>
-                            <div class="text-[10px] text-cyan-400">Code: ${t.code}</div>
-                        </div>
-                        ${t.id === currentTeamId ? '<span class="text-[10px] bg-cyan-950 text-cyan-300 px-2 py-0.5 rounded-full border border-cyan-500/40">Aktiv</span>' : ''}
-                    </div>
-                `).join('');
+            if (!select) return;
+
+            select.innerHTML = teams.map(t => 
+                `<option value="${t.id}" ${t.id === currentTeamId ? 'selected' : ''}>👥 ${t.name} (${t.code || 'Kein Code'})</option>`
+            ).join('');
+
+            // Code Display aktualisieren
+            const activeTeam = teams.find(t => t.id === currentTeamId);
+            const codeDisplay = document.getElementById('currentTeamCodeDisplay');
+            if (codeDisplay && activeTeam) {
+                codeDisplay.innerText = activeTeam.code || '---';
             }
         }
 
         function handleWorkspaceSelectChange(teamId) {
             currentTeamId = teamId;
+            saveLocally();
             renderTeamSelector();
-            if (isLocalMode) {
-                renderBoard();
-            } else {
-                subscribeToProjects();
-            }
-            showToast("Team gewechselt", "info");
+            renderBoard();
+            showToast("Teamansicht gewechselt", "info");
         }
 
-        function renderBoard() {
-            const searchQuery = document.getElementById('suche').value.toLowerCase();
+        function oeffneTeamModal() {
+            renderTeamListInModal();
+            document.getElementById('teamModal').classList.remove('hidden');
+            lucide.createIcons();
+        }
 
-            const filteredProjects = allProjects.filter(p => {
+        function schließeTeamModal() {
+            document.getElementById('teamModal').classList.add('hidden');
+        }
+
+        function renderTeamListInModal() {
+            const container = document.getElementById('teamListeModal');
+            const countBadge = document.getElementById('teamCountBadge');
+            if (countBadge) countBadge.innerText = `${teams.length} ${teams.length === 1 ? 'Team' : 'Teams'}`;
+
+            if (!container) return;
+
+            container.innerHTML = teams.map(t => {
+                const isCurrent = t.id === currentTeamId;
+                const teamTasksCount = allProjects.filter(p => p.teamId === t.id).length;
+
+                return `
+                    <div class="flex items-center justify-between p-3 rounded-xl bg-slate-950 border ${isCurrent ? 'border-emerald-500/50 bg-emerald-950/20' : 'border-slate-800'} text-xs">
+                        <div>
+                            <div class="font-bold text-white flex items-center gap-2">
+                                <span>${t.name}</span>
+                                ${isCurrent ? '<span class="text-[9px] bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/40">Aktiv</span>' : ''}
+                            </div>
+                            <div class="text-[10px] font-mono text-cyan-400 mt-0.5">Code: <span class="select-all font-bold">${t.code}</span> • ${teamTasksCount} Aufgaben</div>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            ${!isCurrent ? `
+                                <button onclick="handleWorkspaceSelectChange('${t.id}'); schließeTeamModal();" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-[11px] font-semibold transition-all">
+                                    Wechseln
+                                </button>
+                            ` : ''}
+                            ${teams.length > 1 ? `
+                                <button onclick="loescheTeam('${t.id}')" class="p-1.5 text-slate-500 hover:text-rose-400 rounded-lg hover:bg-rose-950/40 transition-colors" title="Team entfernen">
+                                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        function erstelleTeam() {
+            const input = document.getElementById('createTeamNameInput');
+            const name = input.value.trim();
+            if (!name) return;
+
+            // 4-stelliger Zufallscode
+            const randomCode = 'HG-' + Math.floor(1000 + Math.random() * 9000);
+
+            const newTeam = {
+                id: 'team_' + Date.now(),
+                name: name,
+                code: randomCode
+            };
+
+            teams.push(newTeam);
+            currentTeamId = newTeam.id;
+            input.value = '';
+
+            renderTeamSelector();
+            renderTeamListInModal();
+            renderBoard();
+            speichereAllesAutomatischerSync();
+
+            showToast(`Team "${name}" erstellt (Code: ${randomCode})`, "success");
+        }
+
+        function treteTeamBei() {
+            const input = document.getElementById('joinTeamCodeInput');
+            const code = input.value.trim().toUpperCase();
+            if (!code) return;
+
+            const existingTeam = teams.find(t => t.code && t.code.toUpperCase() === code);
+
+            if (existingTeam) {
+                currentTeamId = existingTeam.id;
+                input.value = '';
+                renderTeamSelector();
+                renderBoard();
+                schließeTeamModal();
+                showToast(`Erfolgreich dem Team "${existingTeam.name}" beigetreten!`, "success");
+            } else {
+                showToast(`Team mit Code "${code}" nicht gefunden`, "error");
+            }
+        }
+
+        function loescheTeam(teamId) {
+            if (teams.length <= 1) {
+                showToast("Das letzte Team kann nicht gelöscht werden", "error");
+                return;
+            }
+
+            const teamToDelete = teams.find(t => t.id === teamId);
+            teams = teams.filter(t => t.id !== teamId);
+
+            // Zugehörige Aufgaben mit entfernen
+            allProjects = allProjects.filter(p => p.teamId !== teamId);
+
+            if (currentTeamId === teamId) {
+                currentTeamId = teams[0].id;
+            }
+
+            renderTeamSelector();
+            renderTeamListInModal();
+            renderBoard();
+            speichereAllesAutomatischerSync();
+
+            showToast(`Team "${teamToDelete ? teamToDelete.name : ''}" gelöscht`, "info");
+        }
+
+        function kopiereTeamCode() {
+            const activeTeam = teams.find(t => t.id === currentTeamId);
+            if (!activeTeam || !activeTeam.code) return;
+
+            const temp = document.createElement('textarea');
+            temp.value = activeTeam.code;
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand('copy');
+            document.body.removeChild(temp);
+            showToast(`Team-Code "${activeTeam.code}" kopiert!`, "success");
+        }
+
+        // Render Kanban Board
+        function renderBoard() {
+            const searchQuery = (document.getElementById('suche')?.value || '').toLowerCase();
+
+            // Nur Aufgaben des aktuell ausgewählten Teams anzeigen!
+            const currentTeamProjects = allProjects.filter(p => (p.teamId || 'team-main') === currentTeamId);
+
+            const filteredProjects = currentTeamProjects.filter(p => {
                 return (p.titel || '').toLowerCase().includes(searchQuery) ||
                        (p.mitarbeiter || '').toLowerCase().includes(searchQuery) ||
                        (p.kategorie || '').toLowerCase().includes(searchQuery);
@@ -801,7 +1314,7 @@
                 const status = p.status || 'neu';
                 counts[status] = (counts[status] || 0) + 1;
 
-                const cardHtml = createCardHtml(p);
+                const cardHtml = erzeugeKartenHtml(p);
 
                 if (status === 'neu') colNeu.insertAdjacentHTML('beforeend', cardHtml);
                 else if (status === 'arbeit') colArbeit.insertAdjacentHTML('beforeend', cardHtml);
@@ -809,8 +1322,14 @@
                 else if (status === 'fertig') colFertig.insertAdjacentHTML('beforeend', cardHtml);
             });
 
+            // Empty states when column is clean/empty
+            if (counts.neu === 0) colNeu.innerHTML = erzeugeEmptyStateHtml('Neu erfasst');
+            if (counts.arbeit === 0) colArbeit.innerHTML = erzeugeEmptyStateHtml('In Bearbeitung');
+            if (counts.test === 0) colTest.innerHTML = erzeugeEmptyStateHtml('Zur Prüfung');
+            if (counts.fertig === 0) colFertig.innerHTML = erzeugeEmptyStateHtml('Fertig');
+
             // Update stats
-            document.getElementById('stat-gesamt').innerText = filteredProjects.length;
+            document.getElementById('stat-gesamt').innerText = currentTeamProjects.length;
             document.getElementById('stat-arbeit').innerText = counts.arbeit;
             document.getElementById('stat-test').innerText = counts.test;
             document.getElementById('stat-fertig').innerText = counts.fertig;
@@ -823,7 +1342,16 @@
             lucide.createIcons();
         }
 
-        function createCardHtml(p) {
+        function erzeugeEmptyStateHtml(statusName) {
+            return `
+                <div class="h-32 flex flex-col items-center justify-center border-2 border-dashed border-slate-800/80 rounded-xl text-slate-500 text-center p-3">
+                    <i data-lucide="inbox" class="w-5 h-5 mb-1.5 opacity-40"></i>
+                    <span class="text-[11px] font-mono">Keine Aufgaben</span>
+                </div>
+            `;
+        }
+
+        function erzeugeKartenHtml(p) {
             const prioClass = p.prio === 'prio-hoch' ? 'border-l-rose-500' : p.prio === 'prio-mittel' ? 'border-l-amber-400' : 'border-l-emerald-400';
             const prioLabel = p.prio === 'prio-hoch' ? 'Hoch' : p.prio === 'prio-mittel' ? 'Mittel' : 'Niedrig';
             const prioBadgeClass = p.prio === 'prio-hoch' ? 'bg-rose-950 text-rose-300 border-rose-500/40' : p.prio === 'prio-mittel' ? 'bg-amber-950 text-amber-300 border-amber-500/40' : 'bg-emerald-950 text-emerald-300 border-emerald-500/40';
@@ -833,14 +1361,14 @@
             const totalItems = unterpunkte.length;
 
             return `
-                <div class="glass-card rounded-xl p-3.5 border-l-4 ${prioClass} cursor-pointer space-y-2.5" 
+                <div class="glass-card rounded-xl p-3.5 border-l-4 ${prioClass} cursor-pointer space-y-2.5 shadow-sm" 
                      draggable="true" ondragstart="dragStart(event, '${p.id}')" onclick="oeffneDetailModal('${p.id}')">
                     <div class="flex items-center justify-between gap-2">
                         <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-900 border border-slate-700 text-slate-300 font-semibold">${p.kategorie || 'Digital'}</span>
                         <span class="text-[10px] font-mono px-2 py-0.5 rounded-full border ${prioBadgeClass}">${prioLabel}</span>
                     </div>
                     <h3 class="text-xs font-bold text-white font-mono leading-snug line-clamp-2">${p.titel}</h3>
-                    ${p.beschreibung ? `<p class="text-[11px] text-slate-400 line-clamp-2 leading-relaxed">${p.beschreibung}</p>` : ''}
+                    ${p.beschreibung ? `<p class="text-[11px] text-slate-400 line-clamp-2 leading-relaxed font-sans">${p.beschreibung}</p>` : ''}
                     
                     ${totalItems > 0 ? `
                         <div class="flex items-center gap-2 pt-1">
@@ -859,8 +1387,7 @@
             `;
         }
 
-        let draggedProjectId = null;
-
+        // Drag & Drop
         function dragStart(e, id) {
             draggedProjectId = id;
             e.dataTransfer.setData('text/plain', id);
@@ -878,7 +1405,7 @@
             e.currentTarget.classList.remove('drag-over');
         }
 
-        async function drop(e, targetStatus) {
+        function drop(e, targetStatus) {
             e.preventDefault();
             e.currentTarget.classList.remove('drag-over');
 
@@ -888,24 +1415,8 @@
             if (proj && proj.status !== targetStatus) {
                 proj.status = targetStatus;
                 renderBoard();
-
-                if (isLocalMode) {
-                    saveLocalData();
-                    showToast("Status aktualisiert (Lokal)", "success");
-                    return;
-                }
-
-                try {
-                    await db.collection('artifacts').doc(appId).collection('projects').doc(draggedProjectId).update({
-                        status: targetStatus,
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    showToast("Status aktualisiert", "success");
-                } catch (err) {
-                    console.warn("Error updating status in Firebase, saving locally:", err);
-                    saveLocalData();
-                    showToast("Status lokal gespeichert", "info");
-                }
+                speichereAllesAutomatischerSync();
+                showToast(`Status auf "${targetStatus}" geändert`, "success");
             }
         }
 
@@ -913,11 +1424,20 @@
             renderBoard();
         }
 
+        // Modal Handlers
         function oeffneFormularModal(editId = null) {
             const form = document.getElementById('projektForm');
             form.reset();
             document.getElementById('editId').value = '';
-            document.getElementById('formularTitel').innerText = "Neues Projekt erfassen";
+            document.getElementById('formularTitel').innerHTML = `
+                <i data-lucide="plus-circle" class="w-4 h-4 text-emerald-400"></i>
+                <span>Neue Aufgabe anlegen</span>
+            `;
+
+            // Standardmäßig eingeloggten Benutzer als Verantwortlichen eintragen
+            if (currentUser && currentUser.name) {
+                document.getElementById('mitarbeiter').value = currentUser.name;
+            }
 
             if (editId) {
                 const proj = allProjects.find(p => p.id === editId);
@@ -929,89 +1449,64 @@
                     document.getElementById('deadline').value = proj.deadline || '';
                     document.getElementById('kategorie').value = proj.kategorie || 'Digital';
                     document.getElementById('prio').value = proj.prio || 'prio-mittel';
-                    document.getElementById('formularTitel').innerText = "Projekt bearbeiten";
+                    document.getElementById('formularTitel').innerHTML = `
+                        <i data-lucide="edit-3" class="w-4 h-4 text-cyan-400"></i>
+                        <span>Aufgabe bearbeiten</span>
+                    `;
                 }
             }
 
             document.getElementById('formularModal').classList.remove('hidden');
+            lucide.createIcons();
         }
 
         function schließeFormularModal() {
             document.getElementById('formularModal').classList.add('hidden');
         }
 
-        async function speichereProjekt(e) {
+        function speichereProjekt(e) {
             e.preventDefault();
             
             const editId = document.getElementById('editId').value;
-            const titel = document.getElementById('titel').value;
-            const beschreibung = document.getElementById('beschreibung').value;
-            const mitarbeiter = document.getElementById('mitarbeiter').value;
+            const titel = document.getElementById('titel').value.trim();
+            const beschreibung = document.getElementById('beschreibung').value.trim();
+            const mitarbeiter = document.getElementById('mitarbeiter').value.trim() || (currentUser ? currentUser.name : '');
             const deadline = document.getElementById('deadline').value;
             const kategorie = document.getElementById('kategorie').value;
             const prio = document.getElementById('prio').value;
 
-            if (isLocalMode) {
-                if (editId) {
-                    const idx = allProjects.findIndex(p => p.id === editId);
-                    if (idx !== -1) {
-                        allProjects[idx] = {
-                            ...allProjects[idx],
-                            titel, beschreibung, mitarbeiter, deadline, kategorie, prio,
-                            updatedAt: new Date().toISOString()
-                        };
-                    }
-                } else {
-                    const newProj = {
-                        id: 'proj_' + Date.now(),
+            if (!titel) return;
+
+            if (editId) {
+                const idx = allProjects.findIndex(p => p.id === editId);
+                if (idx !== -1) {
+                    allProjects[idx] = {
+                        ...allProjects[idx],
                         titel, beschreibung, mitarbeiter, deadline, kategorie, prio,
-                        status: 'neu',
-                        teamId: currentTeamId,
-                        unterpunkte: [],
-                        comments: [],
-                        createdAt: new Date().toISOString()
+                        updatedAt: new Date().toISOString()
                     };
-                    allProjects.push(newProj);
+                    showToast("Aufgabe aktualisiert", "success");
                 }
-                saveLocalData();
-                renderBoard();
-                schließeFormularModal();
-                showToast(editId ? "Projekt lokal aktualisiert" : "Neues Projekt lokal erfasst", "success");
-                return;
+            } else {
+                const newProj = {
+                    id: 'task_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+                    titel, beschreibung, mitarbeiter, deadline, kategorie, prio,
+                    status: 'neu',
+                    teamId: currentTeamId,
+                    unterpunkte: [],
+                    comments: [],
+                    createdAt: new Date().toISOString()
+                };
+                allProjects.unshift(newProj);
+                showToast("Neue Aufgabe erfasst", "success");
             }
 
-            const projData = {
-                titel,
-                beschreibung,
-                mitarbeiter,
-                deadline,
-                kategorie,
-                prio,
-                teamId: currentTeamId,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-
-            const projectsRef = db.collection('artifacts').doc(appId).collection('projects');
-
-            try {
-                if (editId) {
-                    await projectsRef.doc(editId).update(projData);
-                    showToast("Projekt aktualisiert", "success");
-                } else {
-                    projData.status = 'neu';
-                    projData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                    projData.unterpunkte = [];
-                    projData.comments = [];
-                    await projectsRef.add(projData);
-                    showToast("Neues Projekt erfasst", "success");
-                }
-                schließeFormularModal();
-            } catch (err) {
-                console.warn("Error saving project to Firebase, falling back to local mode:", err);
-                enableLocalMode();
-            }
+            schließeFormularModal();
+            renderBoard();
+            speichereAllesAutomatischerSync();
         }
 
+        // Detail View
         function oeffneDetailModal(id) {
             currentDetailProject = allProjects.find(p => p.id === id);
             if (!currentDetailProject) return;
@@ -1050,41 +1545,52 @@
             document.getElementById('detailChecklisteStats').innerText = `${items.filter(i => i.done).length}/${items.length}`;
 
             if (items.length === 0) {
-                container.innerHTML = `<p class="text-[11px] text-slate-500 font-mono">Keine Unterpunkte vorhanden.</p>`;
+                container.innerHTML = `<p class="text-[11px] text-slate-500 font-mono">Keine Teilschritte angelegt.</p>`;
                 return;
             }
 
             container.innerHTML = items.map((item, idx) => `
                 <div class="flex items-center justify-between p-2 rounded-lg bg-slate-950 border border-slate-800 text-xs">
                     <label class="flex items-center gap-2 cursor-pointer text-slate-200 ${item.done ? 'line-through text-slate-500' : ''}">
-                        <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleSubitem(${idx})" class="rounded border-slate-700 text-cyan-500 focus:ring-0">
-                        ${item.titel}
+                        <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleSubitem(${idx})" class="rounded border-slate-700 text-emerald-500 focus:ring-0">
+                        <span>${item.titel}</span>
                     </label>
+                    <button onclick="deleteSubitem(${idx})" class="text-slate-500 hover:text-rose-400 p-1">
+                        <i data-lucide="trash" class="w-3.5 h-3.5"></i>
+                    </button>
                 </div>
             `).join('');
+            lucide.createIcons();
         }
 
-        async function toggleSubitem(idx) {
-            if (!currentDetailProject) return;
-            const items = currentDetailProject.unterpunkte || [];
-            if (items[idx]) {
-                items[idx].done = !items[idx].done;
-                renderDetailSubitems();
+        function addSubitem() {
+            const input = document.getElementById('newSubitemInput');
+            const text = input.value.trim();
+            if (!text || !currentDetailProject) return;
 
-                if (isLocalMode) {
-                    saveLocalData();
-                    renderBoard();
-                    return;
-                }
+            if (!currentDetailProject.unterpunkte) currentDetailProject.unterpunkte = [];
+            currentDetailProject.unterpunkte.push({ titel: text, done: false });
+            input.value = '';
 
-                try {
-                    await db.collection('artifacts').doc(appId).collection('projects').doc(currentDetailProject.id).update({
-                        unterpunkte: items
-                    });
-                } catch (e) {
-                    saveLocalData();
-                }
-            }
+            renderDetailSubitems();
+            renderBoard();
+            speichereAllesAutomatischerSync();
+        }
+
+        function toggleSubitem(idx) {
+            if (!currentDetailProject || !currentDetailProject.unterpunkte[idx]) return;
+            currentDetailProject.unterpunkte[idx].done = !currentDetailProject.unterpunkte[idx].done;
+            renderDetailSubitems();
+            renderBoard();
+            speichereAllesAutomatischerSync();
+        }
+
+        function deleteSubitem(idx) {
+            if (!currentDetailProject || !currentDetailProject.unterpunkte) return;
+            currentDetailProject.unterpunkte.splice(idx, 1);
+            renderDetailSubitems();
+            renderBoard();
+            speichereAllesAutomatischerSync();
         }
 
         function renderDetailComments() {
@@ -1093,49 +1599,38 @@
             const comments = currentDetailProject.comments || [];
 
             if (comments.length === 0) {
-                container.innerHTML = `<p class="text-[11px] text-slate-500 font-mono">Keine Kommentare vorhanden.</p>`;
+                container.innerHTML = `<p class="text-[11px] text-slate-500 font-mono">Keine Notizen vorhanden.</p>`;
                 return;
             }
 
             container.innerHTML = comments.map(c => `
                 <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs space-y-1">
                     <div class="flex items-center justify-between text-[10px] font-mono text-cyan-400">
-                        <span>${c.author || 'Teammitglied'}</span>
+                        <span class="font-bold">${c.author || 'Team'}</span>
                         <span class="text-slate-500">${c.time || ''}</span>
                     </div>
-                    <p class="text-slate-300 leading-relaxed">${c.text}</p>
+                    <p class="text-slate-300 leading-relaxed font-sans">${c.text}</p>
                 </div>
             `).join('');
         }
 
-        async function addComment() {
+        function addComment() {
             const input = document.getElementById('newCommentInput');
             const text = input.value.trim();
             if (!text || !currentDetailProject) return;
 
-            const comments = currentDetailProject.comments || [];
-            const newComment = {
+            const authorName = currentUser && currentUser.name ? currentUser.name : "Teammitglied";
+
+            if (!currentDetailProject.comments) currentDetailProject.comments = [];
+            currentDetailProject.comments.push({
                 text,
-                author: "Mitarbeiter",
+                author: authorName,
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            };
-            comments.push(newComment);
+            });
             input.value = '';
 
             renderDetailComments();
-
-            if (isLocalMode) {
-                saveLocalData();
-                return;
-            }
-
-            try {
-                await db.collection('artifacts').doc(appId).collection('projects').doc(currentDetailProject.id).update({
-                    comments
-                });
-            } catch (e) {
-                saveLocalData();
-            }
+            speichereAllesAutomatischerSync();
         }
 
         function bearbeiteProjektVomDetail() {
@@ -1145,108 +1640,52 @@
             oeffneFormularModal(id);
         }
 
-        async function loescheProjektVomDetail() {
+        function loescheProjektVomDetail() {
             if (!currentDetailProject) return;
             const id = currentDetailProject.id;
             schließeDetailModal();
 
-            if (isLocalMode) {
-                allProjects = allProjects.filter(p => p.id !== id);
-                saveLocalData();
-                renderBoard();
-                showToast("Projekt gelöscht", "info");
-                return;
-            }
-
-            try {
-                await db.collection('artifacts').doc(appId).collection('projects').doc(id).delete();
-                showToast("Projekt gelöscht", "info");
-            } catch (err) {
-                console.warn("Delete error, executing locally:", err);
-                allProjects = allProjects.filter(p => p.id !== id);
-                saveLocalData();
-                renderBoard();
-            }
+            allProjects = allProjects.filter(p => p.id !== id);
+            renderBoard();
+            speichereAllesAutomatischerSync();
+            showToast("Aufgabe gelöscht", "info");
         }
 
-        // Teams Modal Logic
-        function oeffneTeamModal() {
-            document.getElementById('teamModal').classList.remove('hidden');
+        // Diagnose Modal
+        function oeffneDiagnoseModal() {
+            document.getElementById('diagnoseModal').classList.remove('hidden');
+            lucide.createIcons();
         }
 
-        function schließeTeamModal() {
-            document.getElementById('teamModal').classList.add('hidden');
+        function schließeDiagnoseModal() {
+            document.getElementById('diagnoseModal').classList.add('hidden');
         }
 
-        async function erstelleTeam() {
-            const input = document.getElementById('createTeamNameInput');
-            const name = input.value.trim();
-            if (!name) return;
-
-            const code = 'TEAM-' + Math.floor(1000 + Math.random() * 9000);
-
-            if (isLocalMode) {
-                const newTeam = {
-                    id: 'team_' + Date.now(),
-                    name,
-                    code
-                };
-                teams.push(newTeam);
-                saveLocalData();
-                input.value = '';
-                handleWorkspaceSelectChange(newTeam.id);
-                showToast(`Neues Team "${name}" erstellt (Lokal)`, "success");
-                return;
-            }
-
-            const newTeam = {
-                name,
-                code,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-
-            try {
-                const docRef = await db.collection('artifacts').doc(appId).collection('teams').add(newTeam);
-                teams.push({ id: docRef.id, ...newTeam });
-                input.value = '';
-                handleWorkspaceSelectChange(docRef.id);
-                showToast(`Neues Team "${name}" erstellt`, "success");
-            } catch (err) {
-                console.warn("Error creating team in Firebase, creating locally:", err);
-                enableLocalMode();
-            }
+        function kopiereScriptCode() {
+            const code = document.getElementById('appsScriptTemplate').value;
+            const tempArea = document.createElement('textarea');
+            tempArea.value = code;
+            document.body.appendChild(tempArea);
+            tempArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempArea);
+            showToast("Script-Code in Zwischenablage kopiert!", "success");
         }
 
-        async function treteTeamBei() {
-            const input = document.getElementById('joinTeamCodeInput');
-            const code = input.value.trim().toUpperCase();
-            if (!code) return;
-
-            const found = teams.find(t => t.code === code);
-            if (found) {
-                handleWorkspaceSelectChange(found.id);
-                input.value = '';
-                schließeTeamModal();
-            } else {
-                showToast("Team-Code nicht gefunden", "error");
-            }
+        function testeVerbindungLive() {
+            showToast("Verbindung wird geprüft...", "info");
+            ladeDatenVonGoogleSheets();
         }
 
+        // Theme Toggle
         function toggleTheme() {
             document.body.classList.toggle('light-theme');
         }
 
-        function toggleAiModal() {
-            showToast("AI Advisor Analyse gestartet...", "info");
-        }
-
-        function toggleVerlauf() {
-            showToast("Verlauf ist aktuell auf dem neuesten Stand", "info");
-        }
-
-        // Toast Helper
+        // Toast Messages
         function showToast(message, type = 'info') {
             const container = document.getElementById('toastContainer');
+            if (!container) return;
             const toast = document.createElement('div');
             
             const bgClass = type === 'success' ? 'bg-emerald-950 border-emerald-500/40 text-emerald-300' :
@@ -1263,9 +1702,10 @@
             }, 3000);
         }
 
-        // Initialize Canvas Background
+        // Cyber Particle Background
         function initBackground() {
             const canvas = document.getElementById('bgCanvas');
+            if (!canvas) return;
             const ctx = canvas.getContext('2d');
             let width = canvas.width = window.innerWidth;
             let height = canvas.height = window.innerHeight;
@@ -1275,17 +1715,17 @@
                 height = canvas.height = window.innerHeight;
             });
 
-            const particles = Array.from({ length: 25 }, () => ({
+            const particles = Array.from({ length: 20 }, () => ({
                 x: Math.random() * width,
                 y: Math.random() * height,
-                vx: (Math.random() - 0.5) * 0.4,
-                vy: (Math.random() - 0.5) * 0.4,
+                vx: (Math.random() - 0.5) * 0.3,
+                vy: (Math.random() - 0.5) * 0.3,
                 radius: Math.random() * 1.5 + 1
             }));
 
             function animate() {
                 ctx.clearRect(0, 0, width, height);
-                ctx.fillStyle = 'rgba(56, 189, 248, 0.3)';
+                ctx.fillStyle = 'rgba(16, 185, 129, 0.25)';
 
                 particles.forEach(p => {
                     p.x += p.vx;
@@ -1304,10 +1744,10 @@
             animate();
         }
 
-        // On Load Entry Point
+        // On Load Entry
         window.onload = function() {
             initBackground();
-            initFirebase();
+            initApp();
             lucide.createIcons();
         };
     </script>
