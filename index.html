@@ -184,6 +184,11 @@
 
                     <!-- Actions -->
                     <div class="flex items-center gap-2 w-full sm:w-auto overflow-x-auto no-scrollbar py-0.5">
+                        <button onclick="oeffneDiagnoseModal()" class="bg-slate-900 hover:bg-slate-800 text-cyan-300 font-semibold py-2 px-3 rounded-xl text-xs border border-cyan-500/30 shadow-sm flex items-center justify-center gap-1.5 transition-all shrink-0" title="Google Script Code & Anleitung anzeigen">
+                            <i data-lucide="code-2" class="w-4 h-4 text-cyan-400"></i>
+                            <span class="whitespace-nowrap">Apps Script</span>
+                        </button>
+
                         <button onclick="oeffneFormularModal()" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold py-2 px-3.5 rounded-xl text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shrink-0">
                             <i data-lucide="plus-circle" class="w-4 h-4"></i>
                             <span class="whitespace-nowrap">Neue Aufgabe</span>
@@ -230,7 +235,7 @@
             <div class="flex items-center gap-2 w-full md:w-auto justify-end">
                 <button onclick="oeffneTeamModal()" class="w-full sm:w-auto px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white rounded-xl text-xs border border-slate-700 flex items-center justify-center gap-1.5 transition-all shadow-sm">
                     <i data-lucide="users" class="w-4 h-4 text-cyan-400"></i>
-                    <span>Team wechseln / Beitreten</span>
+                    <span>Meine Teams & Beitreten</span>
                 </button>
             </div>
         </div>
@@ -459,10 +464,10 @@
             <!-- Available Teams List -->
             <div class="space-y-2">
                 <div class="flex items-center justify-between">
-                    <label class="block text-xs font-mono uppercase text-slate-300 font-bold">Verfügbare Teams</label>
-                    <span class="text-[10px] font-mono text-slate-400" id="teamCountBadge">0 Teams</span>
+                    <label class="block text-xs font-mono uppercase text-slate-300 font-bold">Meine Team-Mitgliedschaften</label>
+                    <span class="text-[10px] font-mono text-cyan-400" id="teamCountBadge">0 Teams</span>
                 </div>
-                <div id="teamListeModal" class="space-y-2 max-h-48 overflow-y-auto"></div>
+                <div id="teamListeModal" class="space-y-2 max-h-56 overflow-y-auto"></div>
             </div>
 
             <div class="flex justify-end pt-2 border-t border-slate-800">
@@ -633,25 +638,27 @@
             </div>
 
             <div class="space-y-3 text-xs leading-relaxed text-slate-300">
-                <div class="p-3 bg-amber-950/40 border border-amber-500/40 rounded-xl space-y-1">
-                    <div class="font-bold text-amber-300 flex items-center gap-1.5">
-                        <i data-lucide="alert-triangle" class="w-4 h-4"></i>
-                        Häufigste Ursache: Freigabe-Einstellung
+                <div class="p-3 bg-emerald-950/40 border border-emerald-500/40 rounded-xl space-y-1">
+                    <div class="font-bold text-emerald-300 flex items-center gap-1.5">
+                        <i data-lucide="check-circle" class="w-4 h-4"></i>
+                        Vollständiges Google Apps Script v2.0
                     </div>
                     <p class="text-[11px] text-slate-300">
-                        Wenn die Meldung <em>„Google Tabelle aktuell nicht erreichbar“</em> erscheint, blockiert Google Apps Script die Web-Anfrage, weil die Bereitstellung noch nicht für <strong>„Jeder“ (anonym)</strong> freigegeben ist.
+                        Dieses Skript speichert automatisch <strong>Benutzer & Passwörter (Tab 'Users')</strong>, <strong>Teams (Tab 'Teams')</strong> und <strong>Aufgaben (Tab 'Projects')</strong> in deiner Tabelle.
                     </p>
                 </div>
 
                 <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 space-y-2">
-                    <h4 class="font-bold text-white uppercase text-[11px] font-mono">So löst du das in 3 Schritten:</h4>
+                    <h4 class="font-bold text-white uppercase text-[11px] font-mono">So aktualisierst du dein Skript:</h4>
                     <ol class="list-decimal list-inside space-y-2 text-[11px] text-slate-300">
-                        <li>Öffne dein Google Apps Script über deine Tabelle (<strong>Erweiterungen &rarr; Apps Script</strong>).</li>
-                        <li>Klicke oben rechts auf den blauen Button <strong>„Bereitstellen“ &rarr; „Bereitstellungen verwalten“</strong> (oder <em>„Neue Bereitstellung“</em>).</li>
-                        <li>Stelle sicher, dass:
+                        <li>Öffne deine Google-Tabelle &rarr; Menü <strong>Erweiterungen &rarr; Apps Script</strong>.</li>
+                        <li>Ersetze den gesamten bestehenden Code durch den Code unten (Klick auf <em>„Code kopieren“</em>).</li>
+                        <li>Klicke auf <strong>Bereitstellen &rarr; Bereitstellungen verwalten</strong>:
                             <ul class="list-disc list-inside pl-4 mt-1 text-cyan-300 font-mono text-[10px]">
-                                <li>Ausführen als: <strong>Ich (deine E-Mail)</strong></li>
-                                <li>Wer hat Zugriff: <strong>Jeder</strong> (nicht „Nur ich“!)</li>
+                                <li>Klicke auf das Stiftsymbol (Bearbeiten)</li>
+                                <li>Version: <strong>Neue Version</strong></li>
+                                <li>Zugriff: <strong>Jeder</strong></li>
+                                <li>Klicke auf <strong>Bereitstellen</strong></li>
                             </ul>
                         </li>
                     </ol>
@@ -659,10 +666,10 @@
 
                 <div class="space-y-1.5">
                     <div class="flex items-center justify-between">
-                        <span class="text-[11px] font-mono font-bold text-slate-300">Benötigter Apps-Script Code:</span>
-                        <button onclick="kopiereScriptCode()" class="text-[10px] font-mono text-cyan-400 hover:text-cyan-300 bg-cyan-950 border border-cyan-500/30 px-2 py-0.5 rounded">Code kopieren</button>
+                        <span class="text-[11px] font-mono font-bold text-slate-300">Finaler Google Apps Script Code:</span>
+                        <button onclick="kopiereScriptCode()" class="text-[10px] font-mono text-cyan-400 hover:text-cyan-300 bg-cyan-950 border border-cyan-500/30 px-2 py-0.5 rounded font-bold">📋 Code kopieren</button>
                     </div>
-                    <textarea id="appsScriptTemplate" readonly rows="5" class="w-full p-2.5 bg-slate-900 font-mono text-[10px] text-slate-400 border border-slate-800 rounded-xl outline-none select-all resize-none"></textarea>
+                    <textarea id="appsScriptTemplate" readonly rows="7" class="w-full p-2.5 bg-slate-900 font-mono text-[10px] text-slate-300 border border-slate-800 rounded-xl outline-none select-all resize-none"></textarea>
                 </div>
             </div>
 
@@ -700,6 +707,9 @@
                 const storedUser = localStorage.getItem('hergarten_current_user');
                 if (storedUser) {
                     currentUser = JSON.parse(storedUser);
+                    if (!currentUser.joinedTeams) {
+                        currentUser.joinedTeams = ['team-main'];
+                    }
                 }
             } catch (e) {
                 console.warn('Storage reading issue:', e);
@@ -719,9 +729,12 @@
             if (scriptField) {
                 scriptField.value = `function doGet(e) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  
-  // Sheet Projects
+
+  // 1. Sheet Projects
   var pSheet = ss.getSheetByName("Projects") || ss.insertSheet("Projects");
+  if (pSheet.getLastRow() === 0) {
+    pSheet.appendRow(["ID", "Titel", "Beschreibung", "Mitarbeiter", "Deadline", "Kategorie", "Prioritaet", "Status", "TeamID", "UnterpunkteJSON", "KommentareJSON", "UpdatedAt"]);
+  }
   var pData = pSheet.getDataRange().getValues();
   var projects = [];
   if (pData.length > 1) {
@@ -738,13 +751,18 @@
         status: pData[i][7] || 'neu',
         teamId: pData[i][8] || 'team-main',
         unterpunkte: pData[i][9] ? JSON.parse(pData[i][9]) : [],
-        comments: pData[i][10] ? JSON.parse(pData[i][10]) : []
+        comments: pData[i][10] ? JSON.parse(pData[i][10]) : [],
+        updatedAt: pData[i][11] ? String(pData[i][11]) : ''
       });
     }
   }
 
-  // Sheet Teams
+  // 2. Sheet Teams
   var tSheet = ss.getSheetByName("Teams") || ss.insertSheet("Teams");
+  if (tSheet.getLastRow() === 0) {
+    tSheet.appendRow(["ID", "Name", "Code", "ErstelltVon"]);
+    tSheet.appendRow(["team-main", "Hergarten Hauptteam", "HG-MAIN", "System"]);
+  }
   var tData = tSheet.getDataRange().getValues();
   var teams = [];
   if (tData.length > 1) {
@@ -753,13 +771,17 @@
       teams.push({
         id: String(tData[j][0]),
         name: tData[j][1] || '',
-        code: tData[j][2] || ''
+        code: tData[j][2] || '',
+        createdBy: tData[j][3] || 'System'
       });
     }
   }
 
-  // Sheet Users (Passwörter & Abteilungen)
+  // 3. Sheet Users (Passwörter & Teams)
   var uSheet = ss.getSheetByName("Users") || ss.insertSheet("Users");
+  if (uSheet.getLastRow() === 0) {
+    uSheet.appendRow(["Name", "Rolle", "Passwort", "BeigetreteneTeamsJSON"]);
+  }
   var uData = uSheet.getDataRange().getValues();
   var users = [];
   if (uData.length > 1) {
@@ -768,54 +790,74 @@
       users.push({
         name: String(uData[u][0]),
         role: String(uData[u][1] || 'Projektmanagement'),
-        password: String(uData[u][2] || '')
+        password: String(uData[u][2] || ''),
+        joinedTeams: uData[u][3] ? JSON.parse(uData[u][3]) : ['team-main']
       });
     }
   }
 
-  return ContentService.createTextOutput(JSON.stringify({ status: "success", projects: projects, teams: teams, users: users }))
-    .setMimeType(ContentService.MimeType.JSON);
+  return ContentService.createTextOutput(JSON.stringify({ 
+    status: "success", 
+    projects: projects, 
+    teams: teams, 
+    users: users 
+  })).setMimeType(ContentService.MimeType.JSON);
 }
 
 function doPost(e) {
-  var payload = JSON.parse(e.postData.contents);
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-
-  if (payload.projects) {
-    var pSheet = ss.getSheetByName("Projects") || ss.insertSheet("Projects");
-    pSheet.clearContents();
-    pSheet.appendRow(["ID", "Titel", "Beschreibung", "Mitarbeiter", "Deadline", "Kategorie", "Prioritaet", "Status", "TeamID", "UnterpunkteJSON", "KommentareJSON"]);
-    var pList = payload.projects;
-    for (var i = 0; i < pList.length; i++) {
-      var p = pList[i];
-      pSheet.appendRow([p.id, p.titel, p.beschreibung, p.mitarbeiter, p.deadline, p.kategorie, p.prio, p.status, p.teamId || 'team-main', JSON.stringify(p.unterpunkte || []), JSON.stringify(p.comments || [])]);
+  try {
+    var contents = e.postData ? e.postData.contents : null;
+    if (!contents) {
+      return ContentService.createTextOutput(JSON.stringify({ status: "error", message: "No data" })).setMimeType(ContentService.MimeType.JSON);
     }
-  }
+    var payload = JSON.parse(contents);
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
 
-  if (payload.teams) {
-    var tSheet = ss.getSheetByName("Teams") || ss.insertSheet("Teams");
-    tSheet.clearContents();
-    tSheet.appendRow(["ID", "Name", "Code"]);
-    var tList = payload.teams;
-    for (var j = 0; j < tList.length; j++) {
-      var t = tList[j];
-      tSheet.appendRow([t.id, t.name, t.code]);
+    // 1. Projects speichern
+    if (payload.projects) {
+      var pSheet = ss.getSheetByName("Projects") || ss.insertSheet("Projects");
+      pSheet.clear();
+      pSheet.appendRow(["ID", "Titel", "Beschreibung", "Mitarbeiter", "Deadline", "Kategorie", "Prioritaet", "Status", "TeamID", "UnterpunkteJSON", "KommentareJSON", "UpdatedAt"]);
+      for (var i = 0; i < payload.projects.length; i++) {
+        var p = payload.projects[i];
+        pSheet.appendRow([
+          p.id, p.titel, p.beschreibung, p.mitarbeiter, p.deadline, 
+          p.kategorie, p.prio, p.status, p.teamId || 'team-main', 
+          JSON.stringify(p.unterpunkte || []), 
+          JSON.stringify(p.comments || []),
+          p.updatedAt || ''
+        ]);
+      }
     }
-  }
 
-  if (payload.users) {
-    var uSheet = ss.getSheetByName("Users") || ss.insertSheet("Users");
-    uSheet.clearContents();
-    uSheet.appendRow(["Name", "Rolle", "Passwort"]);
-    var uList = payload.users;
-    for (var k = 0; k < uList.length; k++) {
-      var usr = uList[k];
-      uSheet.appendRow([usr.name, usr.role, usr.password]);
+    // 2. Teams speichern
+    if (payload.teams) {
+      var tSheet = ss.getSheetByName("Teams") || ss.insertSheet("Teams");
+      tSheet.clear();
+      tSheet.appendRow(["ID", "Name", "Code", "ErstelltVon"]);
+      for (var j = 0; j < payload.teams.length; j++) {
+        var t = payload.teams[j];
+        tSheet.appendRow([t.id, t.name, t.code, t.createdBy || 'System']);
+      }
     }
-  }
 
-  return ContentService.createTextOutput(JSON.stringify({ status: "ok" }))
-    .setMimeType(ContentService.MimeType.JSON);
+    // 3. Users speichern
+    if (payload.users) {
+      var uSheet = ss.getSheetByName("Users") || ss.insertSheet("Users");
+      uSheet.clear();
+      uSheet.appendRow(["Name", "Rolle", "Passwort", "BeigetreteneTeamsJSON"]);
+      for (var k = 0; k < payload.users.length; k++) {
+        var usr = payload.users[k];
+        uSheet.appendRow([usr.name, usr.role, usr.password, JSON.stringify(usr.joinedTeams || ['team-main'])]);
+      }
+    }
+
+    return ContentService.createTextOutput(JSON.stringify({ status: "ok" }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ status: "error", error: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
 }`;
             }
 
@@ -933,24 +975,37 @@ function doPost(e) {
                     showToast("Falsches Passwort für dieses Profil!", "error");
                     return;
                 }
-                // Rolle aktualisieren falls geändert
+                // Rolle & Teams aktualisieren
                 existingUser.role = role;
-                currentUser = { name: existingUser.name, role: existingUser.role };
+                if (!existingUser.joinedTeams || existingUser.joinedTeams.length === 0) {
+                    existingUser.joinedTeams = ['team-main'];
+                }
+                currentUser = { 
+                    name: existingUser.name, 
+                    role: existingUser.role,
+                    joinedTeams: existingUser.joinedTeams
+                };
             } else {
                 // Neuer Benutzer wird angelegt und mit Passwort geschützt
-                const newUser = { name, role, password };
+                const newUser = { 
+                    name, 
+                    role, 
+                    password,
+                    joinedTeams: ['team-main'] // Standardmäßig im Hauptteam
+                };
                 registeredUsers.push(newUser);
-                currentUser = { name, role };
+                currentUser = { name, role, joinedTeams: newUser.joinedTeams };
                 showToast(`Neuer Account für "${name}" erstellt & geschützt!`, "success");
             }
 
-            // Speichern in LocalStorage und Google Sheets Synchronisation anstoßen
+            // Speichern in LocalStorage
             try {
                 localStorage.setItem('hergarten_current_user', JSON.stringify(currentUser));
                 localStorage.setItem('hergarten_registered_users', JSON.stringify(registeredUsers));
             } catch(err) {}
 
             renderUserUI();
+            renderTeamSelector();
             document.getElementById('userModal').classList.add('hidden');
             showToast(`Angemeldet als ${currentUser.name} (${currentUser.role})`, "success");
 
@@ -960,6 +1015,7 @@ function doPost(e) {
                 mitarbeiterField.value = currentUser.name;
             }
 
+            // Sofort mit Google Tabelle synchronisieren
             speichereAllesAutomatischerSync();
         }
 
@@ -970,28 +1026,11 @@ function doPost(e) {
             } catch (e) {}
 
             renderUserUI();
+            renderTeamSelector();
             showToast("Erfolgreich abgemeldet & Board gesperrt", "info");
             oeffneUserModal(true);
         }
-
-        // Connection Badge UI updater
-        function updateConnectionBadge(status = 'online') {
-            const badge = document.getElementById('datenquelleBadge');
-            if (!badge) return;
-
-            if (status === 'online') {
-                badge.className = "inline-flex items-center gap-1.5 text-[10px] px-2.5 py-0.5 rounded-full font-mono transition-all bg-emerald-950/80 text-emerald-400 border border-emerald-500/40 shadow-sm cursor-pointer hover:border-emerald-400";
-                badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Google Tabelle verbunden`;
-            } else if (status === 'syncing') {
-                badge.className = "inline-flex items-center gap-1.5 text-[10px] px-2.5 py-0.5 rounded-full font-mono transition-all bg-cyan-950/80 text-cyan-400 border border-cyan-500/40 shadow-sm cursor-pointer";
-                badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-spin"></span> Synchronisiere...`;
-            } else {
-                badge.className = "inline-flex items-center gap-1.5 text-[10px] px-2.5 py-0.5 rounded-full font-mono transition-all bg-amber-950/90 text-amber-300 border border-amber-500/50 shadow-sm cursor-pointer hover:bg-amber-900/60";
-                badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Verbindung prüfen (Klick für Hilfe)`;
-            }
-        }
-
-        // Load both teams and projects from Google Sheets
+        // Load both teams, users and projects from Google Sheets
         async function ladeDatenVonGoogleSheets(silent = false) {
             const syncIcon = document.getElementById('syncIcon');
             if (!silent && syncIcon) syncIcon.classList.add('animate-spin');
@@ -1013,7 +1052,7 @@ function doPost(e) {
                 } else if (!teams || teams.length === 0) {
                     // Standard-Team anlegen falls komplett neu
                     teams = [
-                        { id: 'team-main', name: 'Hergarten Hauptteam', code: 'HG-MAIN' }
+                        { id: 'team-main', name: 'Hergarten Hauptteam', code: 'HG-MAIN', createdBy: 'System' }
                     ];
                 }
 
@@ -1022,18 +1061,27 @@ function doPost(e) {
                     allProjects = result.projects;
                 }
 
-                // Benutzerkonten verarbeiten
+                // Benutzerkonten verarbeiten & synchronisieren
                 if (result && Array.isArray(result.users) && result.users.length > 0) {
-                    // Synchronisiere Benutzerliste
                     registeredUsers = result.users;
                     try {
                         localStorage.setItem('hergarten_registered_users', JSON.stringify(registeredUsers));
                     } catch (e) {}
+
+                    // Falls aktuell eingeloggt, Mitgliedschaften synchronisieren
+                    if (currentUser) {
+                        const dbUser = registeredUsers.find(u => u.name.toLowerCase() === currentUser.name.toLowerCase());
+                        if (dbUser && dbUser.joinedTeams) {
+                            currentUser.joinedTeams = dbUser.joinedTeams;
+                            localStorage.setItem('hergarten_current_user', JSON.stringify(currentUser));
+                        }
+                    }
                 }
 
-                // Aktives Team setzen
+                // Aktives Team setzen (bevorzugt ein Team, in dem der User auch ist)
+                const userTeams = getUserJoinedTeams();
                 if (!currentTeamId || !teams.some(t => t.id === currentTeamId)) {
-                    currentTeamId = teams[0].id;
+                    currentTeamId = userTeams.length > 0 ? userTeams[0].id : teams[0].id;
                 }
 
                 // Lokal sichern
@@ -1044,7 +1092,7 @@ function doPost(e) {
                 renderBoard();
 
                 if (!silent) {
-                    showToast(`${allProjects.length} Aufgaben geladen`, "success");
+                    showToast(`${allProjects.length} Aufgaben synchronisiert`, "success");
                 }
             } catch (error) {
                 console.warn('Verbindungsfehler zu Google Sheets:', error);
@@ -1060,87 +1108,46 @@ function doPost(e) {
             }
         }
 
-        // Save both teams, users and projects to Google Sheets & localStorage immediately
-        async function speichereAllesAutomatischerSync(silent = false) {
-            saveLocally();
-
-            const syncIcon = document.getElementById('syncIcon');
-            if (!silent && syncIcon) syncIcon.classList.add('animate-spin');
-            if (!silent) updateConnectionBadge('syncing');
-
-            try {
-                await fetch(GOOGLE_SHEETS_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({
-                        action: 'saveAll',
-                        teams: teams,
-                        projects: allProjects,
-                        users: registeredUsers
-                    })
-                });
-                updateConnectionBadge('online');
-            } catch (error) {
-                console.warn('Fehler beim Autospeichern in Google Sheets:', error);
-                updateConnectionBadge('offline');
-            } finally {
-                if (syncIcon) syncIcon.classList.remove('animate-spin');
+        // Teams Helper: Liefert alle Teams, in denen der aktuelle Benutzer Mitglied ist
+        function getUserJoinedTeams() {
+            if (!currentUser || !currentUser.joinedTeams) {
+                return teams; // Wenn nicht eingeloggt, zeige alle Teams
             }
+            return teams.filter(t => currentUser.joinedTeams.includes(t.id));
         }
 
-        function saveLocally() {
-            try {
-                localStorage.setItem('hergarten_teams_data', JSON.stringify(teams));
-                localStorage.setItem('hergarten_projects_data', JSON.stringify(allProjects));
-                localStorage.setItem('hergarten_active_team_id', currentTeamId);
-                localStorage.setItem('hergarten_registered_users', JSON.stringify(registeredUsers));
-            } catch (e) {
-                console.warn('LocalStorage error:', e);
-            }
-        }
-
-        function loadLocally() {
-            try {
-                const storedTeams = localStorage.getItem('hergarten_teams_data');
-                const storedProjects = localStorage.getItem('hergarten_projects_data');
-                const storedTeamId = localStorage.getItem('hergarten_active_team_id');
-                const storedUsers = localStorage.getItem('hergarten_registered_users');
-
-                if (storedTeams) teams = JSON.parse(storedTeams);
-                if (storedProjects) allProjects = JSON.parse(storedProjects);
-                if (storedUsers) registeredUsers = JSON.parse(storedUsers);
-
-                if (storedTeamId && teams.some(t => t.id === storedTeamId)) {
-                    currentTeamId = storedTeamId;
-                } else if (teams.length > 0) {
-                    currentTeamId = teams[0].id;
-                }
-            } catch (e) {
-                console.warn('LocalStorage load error:', e);
-            }
-
-            if (!teams || teams.length === 0) {
-                teams = [{ id: 'team-main', name: 'Hergarten Hauptteam', code: 'HG-MAIN' }];
-                currentTeamId = 'team-main';
-            }
-        }
-
-        function synchronisiereManuell() {
-            ladeDatenVonGoogleSheets();
-        }
-
-        // Teams Logik & Code-System
+        // Teams Logik & Multi-Team System
         function renderTeamSelector() {
             const select = document.getElementById('workspaceSelect');
             if (!select) return;
 
-            select.innerHTML = teams.map(t => 
-                `<option value="${t.id}" ${t.id === currentTeamId ? 'selected' : ''}>👥 ${t.name} (${t.code || 'Kein Code'})</option>`
-            ).join('');
+            const myTeams = getUserJoinedTeams();
+            const activeTeam = teams.find(t => t.id === currentTeamId);
+
+            if (myTeams.length === 0) {
+                select.innerHTML = teams.map(t => 
+                    `<option value="${t.id}" ${t.id === currentTeamId ? 'selected' : ''}>👥 ${t.name} (${t.code})</option>`
+                ).join('');
+            } else {
+                let html = '<optgroup label="Meine Teams">';
+                html += myTeams.map(t => 
+                    `<option value="${t.id}" ${t.id === currentTeamId ? 'selected' : ''}>⭐ ${t.name} (${t.code})</option>`
+                ).join('');
+                html += '</optgroup>';
+
+                const otherTeams = teams.filter(t => !currentUser.joinedTeams.includes(t.id));
+                if (otherTeams.length > 0) {
+                    html += '<optgroup label="Weitere Firmen-Teams (Klick zum Beitreten)">';
+                    html += otherTeams.map(t => 
+                        `<option value="${t.id}" ${t.id === currentTeamId ? 'selected' : ''}>👥 ${t.name} (${t.code})</option>`
+                    ).join('');
+                    html += '</optgroup>';
+                }
+
+                select.innerHTML = html;
+            }
 
             // Code Display aktualisieren
-            const activeTeam = teams.find(t => t.id === currentTeamId);
             const codeDisplay = document.getElementById('currentTeamCodeDisplay');
             if (codeDisplay && activeTeam) {
                 codeDisplay.innerText = activeTeam.code || '---';
@@ -1149,9 +1156,18 @@ function doPost(e) {
 
         function handleWorkspaceSelectChange(teamId) {
             currentTeamId = teamId;
+
+            // Falls User noch nicht Mitglied ist, automatisch beitreten lassen
+            if (currentUser && currentUser.joinedTeams && !currentUser.joinedTeams.includes(teamId)) {
+                currentUser.joinedTeams.push(teamId);
+                aktualisiereBenutzerInListe();
+                showToast("Team zu 'Meine Teams' hinzugefügt", "info");
+            }
+
             saveLocally();
             renderTeamSelector();
             renderBoard();
+            speichereAllesAutomatischerSync();
             showToast("Teamansicht gewechselt", "info");
         }
 
@@ -1168,31 +1184,49 @@ function doPost(e) {
         function renderTeamListInModal() {
             const container = document.getElementById('teamListeModal');
             const countBadge = document.getElementById('teamCountBadge');
-            if (countBadge) countBadge.innerText = `${teams.length} ${teams.length === 1 ? 'Team' : 'Teams'}`;
+            const myTeams = getUserJoinedTeams();
+            
+            if (countBadge) {
+                countBadge.innerText = `${myTeams.length} von ${teams.length} Teams aktiv`;
+            }
 
             if (!container) return;
 
             container.innerHTML = teams.map(t => {
                 const isCurrent = t.id === currentTeamId;
+                const isMember = currentUser && currentUser.joinedTeams && currentUser.joinedTeams.includes(t.id);
                 const teamTasksCount = allProjects.filter(p => p.teamId === t.id).length;
 
                 return `
-                    <div class="flex items-center justify-between p-3 rounded-xl bg-slate-950 border ${isCurrent ? 'border-emerald-500/50 bg-emerald-950/20' : 'border-slate-800'} text-xs">
+                    <div class="flex items-center justify-between p-3 rounded-xl bg-slate-950 border ${isCurrent ? 'border-emerald-500/60 bg-emerald-950/20' : isMember ? 'border-cyan-500/30' : 'border-slate-800 opacity-80'} text-xs">
                         <div>
                             <div class="font-bold text-white flex items-center gap-2">
                                 <span>${t.name}</span>
-                                ${isCurrent ? '<span class="text-[9px] bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/40">Aktiv</span>' : ''}
+                                ${isCurrent ? '<span class="text-[9px] bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/40">Aktive Ansicht</span>' : ''}
+                                ${isMember && !isCurrent ? '<span class="text-[9px] bg-cyan-950 text-cyan-300 px-2 py-0.5 rounded-full border border-cyan-500/30">Mitglied</span>' : ''}
                             </div>
-                            <div class="text-[10px] font-mono text-cyan-400 mt-0.5">Code: <span class="select-all font-bold">${t.code}</span> • ${teamTasksCount} Aufgaben</div>
+                            <div class="text-[10px] font-mono text-slate-400 mt-0.5">Code: <span class="select-all font-bold text-cyan-300">${t.code}</span> • ${teamTasksCount} Aufgaben</div>
                         </div>
                         <div class="flex items-center gap-1.5">
-                            ${!isCurrent ? `
-                                <button onclick="handleWorkspaceSelectChange('${t.id}'); schließeTeamModal();" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-[11px] font-semibold transition-all">
-                                    Wechseln
+                            ${isMember ? `
+                                ${!isCurrent ? `
+                                    <button onclick="handleWorkspaceSelectChange('${t.id}'); schließeTeamModal();" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-[11px] font-semibold transition-all">
+                                        Öffnen
+                                    </button>
+                                ` : ''}
+                                ${myTeams.length > 1 ? `
+                                    <button onclick="verlasseTeam('${t.id}')" class="px-2 py-1.5 text-slate-400 hover:text-amber-300 rounded-lg hover:bg-slate-800 text-[11px] transition-colors" title="Aus diesem Team austreten">
+                                        Verlassen
+                                    </button>
+                                ` : ''}
+                            ` : `
+                                <button onclick="trittTeamDirektBei('${t.id}')" class="px-2.5 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold rounded-lg text-[11px] transition-all">
+                                    Beitreten
                                 </button>
-                            ` : ''}
-                            ${teams.length > 1 ? `
-                                <button onclick="loescheTeam('${t.id}')" class="p-1.5 text-slate-500 hover:text-rose-400 rounded-lg hover:bg-rose-950/40 transition-colors" title="Team entfernen">
+                            `}
+
+                            ${teams.length > 1 && t.id !== 'team-main' ? `
+                                <button onclick="loescheTeam('${t.id}')" class="p-1.5 text-slate-500 hover:text-rose-400 rounded-lg hover:bg-rose-950/40 transition-colors" title="Team vollständig löschen">
                                     <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                                 </button>
                             ` : ''}
@@ -1201,6 +1235,54 @@ function doPost(e) {
                 `;
             }).join('');
             lucide.createIcons();
+        }
+
+        function aktualisiereBenutzerInListe() {
+            if (!currentUser) return;
+            const idx = registeredUsers.findIndex(u => u.name.toLowerCase() === currentUser.name.toLowerCase());
+            if (idx !== -1) {
+                registeredUsers[idx].joinedTeams = currentUser.joinedTeams;
+            }
+            saveLocally();
+        }
+
+        function trittTeamDirektBei(teamId) {
+            if (!currentUser) {
+                showToast("Bitte erst anmelden!", "error");
+                return;
+            }
+            if (!currentUser.joinedTeams) currentUser.joinedTeams = ['team-main'];
+            if (!currentUser.joinedTeams.includes(teamId)) {
+                currentUser.joinedTeams.push(teamId);
+                aktualisiereBenutzerInListe();
+            }
+            currentTeamId = teamId;
+            renderTeamSelector();
+            renderTeamListInModal();
+            renderBoard();
+            speichereAllesAutomatischerSync();
+            showToast("Team erfolgreich beigetreten!", "success");
+        }
+
+        function verlasseTeam(teamId) {
+            if (!currentUser || !currentUser.joinedTeams) return;
+            if (currentUser.joinedTeams.length <= 1) {
+                showToast("Du musst mindestens in einem Team verbleiben", "error");
+                return;
+            }
+
+            currentUser.joinedTeams = currentUser.joinedTeams.filter(id => id !== teamId);
+            aktualisiereBenutzerInListe();
+
+            if (currentTeamId === teamId) {
+                currentTeamId = currentUser.joinedTeams[0];
+            }
+
+            renderTeamSelector();
+            renderTeamListInModal();
+            renderBoard();
+            speichereAllesAutomatischerSync();
+            showToast("Teammitgliedschaft beendet", "info");
         }
 
         function erstelleTeam() {
@@ -1214,10 +1296,19 @@ function doPost(e) {
             const newTeam = {
                 id: 'team_' + Date.now(),
                 name: name,
-                code: randomCode
+                code: randomCode,
+                createdBy: currentUser ? currentUser.name : 'Dominik'
             };
 
             teams.push(newTeam);
+            
+            // Sofort als Mitglied eintragen
+            if (currentUser) {
+                if (!currentUser.joinedTeams) currentUser.joinedTeams = ['team-main'];
+                currentUser.joinedTeams.push(newTeam.id);
+                aktualisiereBenutzerInListe();
+            }
+
             currentTeamId = newTeam.id;
             input.value = '';
 
@@ -1237,10 +1328,8 @@ function doPost(e) {
             const existingTeam = teams.find(t => t.code && t.code.toUpperCase() === code);
 
             if (existingTeam) {
-                currentTeamId = existingTeam.id;
+                trittTeamDirektBei(existingTeam.id);
                 input.value = '';
-                renderTeamSelector();
-                renderBoard();
                 schließeTeamModal();
                 showToast(`Erfolgreich dem Team "${existingTeam.name}" beigetreten!`, "success");
             } else {
@@ -1249,19 +1338,26 @@ function doPost(e) {
         }
 
         function loescheTeam(teamId) {
-            if (teams.length <= 1) {
-                showToast("Das letzte Team kann nicht gelöscht werden", "error");
+            if (teams.length <= 1 || teamId === 'team-main') {
+                showToast("Das Hauptteam kann nicht gelöscht werden", "error");
                 return;
             }
 
             const teamToDelete = teams.find(t => t.id === teamId);
             teams = teams.filter(t => t.id !== teamId);
 
+            // Aus Mitgliedschaften entfernen
+            if (currentUser && currentUser.joinedTeams) {
+                currentUser.joinedTeams = currentUser.joinedTeams.filter(id => id !== teamId);
+                aktualisiereBenutzerInListe();
+            }
+
             // Zugehörige Aufgaben mit entfernen
             allProjects = allProjects.filter(p => p.teamId !== teamId);
 
             if (currentTeamId === teamId) {
-                currentTeamId = teams[0].id;
+                const myTeams = getUserJoinedTeams();
+                currentTeamId = myTeams.length > 0 ? myTeams[0].id : teams[0].id;
             }
 
             renderTeamSelector();
